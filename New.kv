@@ -1,0 +1,563 @@
+#:kivy 1.9.2
+<GridTile>:
+	canvas:
+		Color:
+			a: float(not root.domed)*1
+		Rectangle:
+			source:root.sources[root.level]
+			pos: self.x, self.y
+			size: self.width , self.height
+		Rectangle:
+			source:root.flags[root.flag]
+			pos: self.pos
+			size: self.size
+		Color:
+			a: float(root.domed)*1
+		Rectangle:
+			source:root.sources[4]
+			pos: self.x, self.y
+			size: self.width , self.height
+	
+<Builder>:
+	canvas:
+		Color:
+			rgba: 1 + 0.2*float(self.isSelected),1 + 0.2*float(self.isSelected),1 + 0.2*float(self.isSelected),1
+		Rectangle:
+			source: root.type
+			pos:self.pos
+			size:self.size
+				
+<Grid>:
+	tileHold:tileHold
+	tile11: tile11
+	tile12:tile12
+	tile13: tile13
+	tile14: tile14
+	tile15: tile15
+	tile21: tile21
+	tile22: tile22
+	tile23: tile23
+	tile24: tile24
+	tile25: tile25
+	tile31: tile31
+	tile32: tile32
+	tile33: tile33
+	tile34: tile34
+	tile35: tile35
+	tile41: tile41
+	tile42: tile42
+	tile43: tile43
+	tile44: tile44
+	tile45: tile45
+	tile51: tile51
+	tile52: tile52
+	tile53: tile53
+	tile54: tile54
+	tile55: tile55
+	
+	canvas:
+		Rectangle:
+			source: 'assets/map elements/map.png'
+			pos:self.pos
+			size:self.width, self.width
+    	Rectangle:
+    		source: 'assets/ui panes and menus/Game Pane.png'
+			pos:0,0
+			size:self.width, self.width*324/1326
+		Rectangle:
+			source: 'assets/ui panes and menus/top_pane.png'
+			pos:0, self.height - self.width/1326*207
+			size:self.width, self.width/1326*207
+		#Counter for Pieces
+		Rectangle:
+			source: 'assets/numbers/'+str(int(((self.levelCap[0]-self.levelUsed[0]) - ((self.levelCap[0] - self.levelUsed[0]) % 10))/10))+'.png'
+			pos: self.width/1326*322,self.width/1326*(324-208)
+			size: self.width /1326*41, self.width/1326*52
+		Rectangle:
+			source: 'assets/numbers/'+str((self.levelCap[0] - self.levelUsed[0]) % 10)+'.png'
+			pos: self.width/1326*366,self.width/1326*(324-208)
+			size: self.width /1326*41, self.width/1326*52
+		Rectangle:
+			source: 'assets/numbers/'+str(int(((self.levelCap[1]-self.levelUsed[1]) - ((self.levelCap[1] - self.levelUsed[1]) % 10))/10))+'.png'
+			pos: self.width/1326*322,self.width/1326*(324-296)
+			size: self.width /1326*41, self.width/1326*52
+		Rectangle:
+			source: 'assets/numbers/'+str((self.levelCap[1] - self.levelUsed[1]) % 10)+'.png'
+			pos: self.width/1326*366,self.width/1326*(324-296)
+			size: self.width /1326*41, self.width/1326*52
+			
+		Rectangle:
+			source: 'assets/numbers/'+str(int(((self.levelCap[2]-self.levelUsed[2]) - ((self.levelCap[2] - self.levelUsed[2]) % 10))/10))+'.png'
+			pos: self.width/1326*553,self.width/1326*(324-208)
+			size: self.width /1326*41, self.width/1326*52
+		Rectangle:
+			source: 'assets/numbers/'+str((self.levelCap[2] - self.levelUsed[2]) % 10)+'.png'
+			pos: self.width/1326*597,self.width/1326*(324-208)
+			size: self.width /1326*41, self.width/1326*52
+			
+		Rectangle:
+			source: 'assets/numbers/'+str(int(((self.levelCap[3]-self.levelUsed[3]) - ((self.levelCap[3] - self.levelUsed[3]) % 10))/10))+'.png'
+			pos: self.width/1326*553,self.width/1326*(324-296)
+			size: self.width /1326*41, self.width/1326*52
+		Rectangle:
+			source: 'assets/numbers/'+str((self.levelCap[3] - self.levelUsed[3]) % 10)+'.png'
+			pos: self.width/1326*597,self.width/1326*(324-296)
+			size: self.width /1326*41, self.width/1326*52
+	GridTile:
+		id: tileHold
+		size:root.width/5,root.height/5
+		x:root.width
+		y:root.height + root.y
+		position: 5,5
+		
+	GridTile:
+		id: tile11
+		size:root.width/5,root.width/5
+		x:0
+		y:0 + root.y
+		position: 0,0
+		source0: 'blank.png'
+		source1: 'assets/map elements/water L1.png'
+		source2: 'assets/map elements/water L2.png'
+		source3: 'assets/map elements/water L3.png'
+		source4: 'assets/map elements/shipwreck (dome).png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/water flag 0.png'
+		flag2: 'assets/map elements/water flag 1.png'
+		
+	GridTile:
+		id: tile12
+		size:root.width/5,root.width/5
+		x:root.width/5*1
+		y:root.width/5*0 + root.y
+		position: 1,0
+		source0: 'blank.png'
+		source1: 'assets/map elements/island b L1.png'
+		source2: 'assets/map elements/island b L2.png'
+		source3: 'assets/map elements/island b L3.png'
+		source4: 'assets/map elements/island b dome.png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/island flag 0.png'
+		flag2: 'assets/map elements/island flag 1.png'
+		
+	GridTile:
+		id: tile13
+		size:root.width/5,root.width/5
+		x:root.width/5*2
+		y:root.width/5*0 + root.y
+		position: 2,0
+		source0: 'blank.png'
+		source1: 'assets/map elements/water L1.png'
+		source2: 'assets/map elements/water L2.png'
+		source3: 'assets/map elements/water L3.png'
+		source4: 'assets/map elements/shipwreck (dome).png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/water flag 0.png'
+		flag2: 'assets/map elements/water flag 1.png'
+		
+	GridTile:
+		id: tile14
+		size:root.width/5,root.width/5
+		x:root.width/5*3
+		y:root.width/5*0 + root.y
+		position: 3,0
+		source0: 'blank.png'
+		source1: 'assets/map elements/island b L1.png'
+		source2: 'assets/map elements/island b L2.png'
+		source3: 'assets/map elements/island b L3.png'
+		source4: 'assets/map elements/island b dome.png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/island flag 0.png'
+		flag2: 'assets/map elements/island flag 1.png'
+		
+	GridTile:
+		id: tile15
+		size:root.width/5,root.width/5
+		x:root.width/5*4
+		y:root.width/5*0 + root.y
+		position: 4,0
+		source0: 'blank.png'
+		source1: 'assets/map elements/water L1.png'
+		source2: 'assets/map elements/water L2.png'
+		source3: 'assets/map elements/water L3.png'
+		source4: 'assets/map elements/shipwreck (dome).png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/water flag 0.png'
+		flag2: 'assets/map elements/water flag 1.png'
+		
+	GridTile:
+		id: tile21
+		size:root.width/5,root.width/5
+		x:root.width/5*0
+		y:root.width/5*1 + root.y
+		position: 0,1
+		source0: 'blank.png'
+		source1: 'assets/map elements/island c L1.png'
+		source2: 'assets/map elements/island c L2.png'
+		source3: 'assets/map elements/island c L3.png'
+		source4: 'assets/map elements/island c dome.png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/island flag 0.png'
+		flag2: 'assets/map elements/island flag 1.png'
+		
+	GridTile:
+		id: tile22
+		size:root.width/5,root.width/5
+		x:root.width/5*1
+		y:root.width/5*1 + root.y
+		position: 1,1
+		source0: 'blank.png'
+		source1: 'assets/map elements/water L1.png'
+		source2: 'assets/map elements/water L2.png'
+		source3: 'assets/map elements/water L3.png'
+		source4: 'assets/map elements/shipwreck (dome).png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/water flag 0.png'
+		flag2: 'assets/map elements/water flag 1.png'
+		
+	GridTile:
+		id: tile23
+		size:root.width/5,root.width/5
+		x:root.width/5*2
+		y:root.width/5*1 + root.y
+		position: 2,1
+		source0: 'blank.png'
+		source1: 'assets/map elements/water L1.png'
+		source2: 'assets/map elements/water L2.png'
+		source3: 'assets/map elements/water L3.png'
+		source4: 'assets/map elements/shipwreck (dome).png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/water flag 0.png'
+		flag2: 'assets/map elements/water flag 1.png'
+		
+	GridTile:
+		id: tile24
+		size:root.width/5,root.width/5
+		x:root.width/5*3
+		y:root.width/5*1 + root.y
+		position: 3,1
+		source0: 'blank.png'
+		source1: 'assets/map elements/water L1.png'
+		source2: 'assets/map elements/water L2.png'
+		source3: 'assets/map elements/water L3.png'
+		source4: 'assets/map elements/shipwreck (dome).png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/water flag 0.png'
+		flag2: 'assets/map elements/water flag 1.png'
+		
+	GridTile:
+		id: tile25
+		size:root.width/5,root.width/5
+		x:root.width/5*4
+		y:root.width/5*1 + root.y
+		position: 4,1
+		source0: 'blank.png'
+		source1: 'assets/map elements/island a L1.png'
+		source2: 'assets/map elements/island a L2.png'
+		source3: 'assets/map elements/island a L3.png'
+		source4: 'assets/map elements/island a dome.png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/island flag 0.png'
+		flag2: 'assets/map elements/island flag 1.png'
+		
+	GridTile:
+		id: tile31
+		size:root.width/5,root.width/5
+		x:root.width/5*0
+		y:root.width/5*2 + root.y
+		position: 0,2
+		source0: 'blank.png'
+		source1: 'assets/map elements/island c L1.png'
+		source2: 'assets/map elements/island c L2.png'
+		source3: 'assets/map elements/island c L3.png'
+		source4: 'assets/map elements/island c dome.png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/island flag 0.png'
+		flag2: 'assets/map elements/island flag 1.png'
+		
+	GridTile:
+		id: tile32
+		size:root.width/5,root.width/5
+		x:root.width/5*1
+		y:root.width/5*2 + root.y
+		position: 1,2
+		source0: 'blank.png'
+		source1: 'assets/map elements/water L1.png'
+		source2: 'assets/map elements/water L2.png'
+		source3: 'assets/map elements/water L3.png'
+		source4: 'assets/map elements/shipwreck (dome).png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/water flag 0.png'
+		flag2: 'assets/map elements/water flag 1.png'
+		
+	GridTile:
+		id: tile33
+		size:root.width/5,root.width/5
+		x:root.width/5*2
+		y:root.width/5*2 + root.y
+		position: 2,2
+		source0: 'blank.png'
+		source1: 'assets/map elements/water L1.png'
+		source2: 'assets/map elements/water L2.png'
+		source3: 'assets/map elements/water L3.png'
+		source4: 'assets/map elements/shipwreck (dome).png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/water flag 0.png'
+		flag2: 'assets/map elements/water flag 1.png'
+		
+	GridTile:
+		id: tile34
+		size:root.width/5,root.width/5
+		x:root.width/5*3
+		y:root.width/5*2 + root.y
+		position: 3,2
+		source0: 'blank.png'
+		source1: 'assets/map elements/island a L1.png'
+		source2: 'assets/map elements/island a L2.png'
+		source3: 'assets/map elements/island a L3.png'
+		source4: 'assets/map elements/island a dome.png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/island flag 0.png'
+		flag2: 'assets/map elements/island flag 1.png'
+		
+	GridTile:
+		id: tile35
+		size:root.width/5,root.width/5
+		x:root.width/5*4
+		y:root.width/5*2 + root.y
+		position: 4,2
+		source0: 'blank.png'
+		source1: 'assets/map elements/island d L1.png'
+		source2: 'assets/map elements/island d L2.png'
+		source3: 'assets/map elements/island d L3.png'
+		source4: 'assets/map elements/island d dome.png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/island flag 0.png'
+		flag2: 'assets/map elements/island flag 1.png'
+		
+	GridTile:
+		id: tile41
+		size:root.width/5,root.width/5
+		x:root.width/5*0
+		y:root.width/5*3 + root.y
+		position: 0,3
+		source0: 'blank.png'
+		source1: 'assets/map elements/island a L1.png'
+		source2: 'assets/map elements/island a L2.png'
+		source3: 'assets/map elements/island a L3.png'
+		source4: 'assets/map elements/island a dome.png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/island flag 0.png'
+		flag2: 'assets/map elements/island flag 1.png'
+		
+	GridTile:
+		id: tile42
+		size:root.width/5,root.width/5
+		x:root.width/5*1
+		y:root.width/5*3 + root.y
+		position: 1,3
+		source0: 'blank.png'
+		source1: 'assets/map elements/island a L1.png'
+		source2: 'assets/map elements/island a L2.png'
+		source3: 'assets/map elements/island a L3.png'
+		source4: 'assets/map elements/island a dome.png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/island flag 0.png'
+		flag2: 'assets/map elements/island flag 1.png'
+		
+	GridTile:
+		id: tile43
+		size:root.width/5,root.width/5
+		x:root.width/5*2
+		y:root.width/5*3 + root.y
+		position: 2,3
+		source0: 'blank.png'
+		source1: 'assets/map elements/island d L1.png'
+		source2: 'assets/map elements/island d L2.png'
+		source3: 'assets/map elements/island d L3.png'
+		source4: 'assets/map elements/island d dome.png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/island flag 0.png'
+		flag2: 'assets/map elements/island flag 1.png'
+		
+	GridTile:
+		id: tile44
+		size:root.width/5,root.width/5
+		x:root.width/5*3
+		y:root.width/5*3 + root.y
+		position: 3,3
+		source0: 'blank.png'
+		source1: 'assets/map elements/water L1.png'
+		source2: 'assets/map elements/water L2.png'
+		source3: 'assets/map elements/water L3.png'
+		source4: 'assets/map elements/shipwreck (dome).png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/water flag 0.png'
+		flag2: 'assets/map elements/water flag 1.png'
+		
+	GridTile:
+		id: tile45
+		size:root.width/5,root.width/5
+		x:root.width/5*4
+		y:root.width/5*3 + root.y
+		position: 4,3
+		source0: 'blank.png'
+		source1: 'assets/map elements/water L1.png'
+		source2: 'assets/map elements/water L2.png'
+		source3: 'assets/map elements/water L3.png'
+		source4: 'assets/map elements/shipwreck (dome).png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/water flag 0.png'
+		flag2: 'assets/map elements/water flag 1.png'
+		
+	GridTile:
+		id: tile51
+		size:root.width/5,root.width/5
+		x:root.width/5*0
+		y:root.width/5*4 + root.y
+		position: 0,4
+		source0: 'blank.png'
+		source1: 'assets/map elements/island e L1.png'
+		source2: 'assets/map elements/island e L2.png'
+		source3: 'assets/map elements/island e L3.png'
+		source4: 'assets/map elements/island e dome.png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/island flag 0.png'
+		flag2: 'assets/map elements/island flag 1.png'
+		
+	GridTile:
+		id: tile52
+		size:root.width/5,root.width/5
+		x:root.width/5*1
+		y:root.width/5*4 + root.y
+		position: 1,4
+		source0: 'blank.png'
+		source1: 'assets/map elements/water L1.png'
+		source2: 'assets/map elements/water L2.png'
+		source3: 'assets/map elements/water L3.png'
+		source4: 'assets/map elements/shipwreck (dome).png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/water flag 0.png'
+		flag2: 'assets/map elements/water flag 1.png'
+		
+	GridTile:
+		id: tile53
+		size:root.width/5,root.width/5
+		x:root.width/5*2
+		y:root.width/5*4 + root.y
+		position: 2,4
+		source0: 'blank.png'
+		source1: 'assets/map elements/water L1.png'
+		source2: 'assets/map elements/water L2.png'
+		source3: 'assets/map elements/water L3.png'
+		source4: 'assets/map elements/shipwreck (dome).png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/water flag 0.png'
+		flag2: 'assets/map elements/water flag 1.png'
+		
+	GridTile:
+		id: tile54
+		size:root.width/5,root.width/5
+		x:root.width/5*3
+		y:root.width/5*4 + root.y
+		position: 3,4
+		source0: 'blank.png'
+		source1: 'assets/map elements/water L1.png'
+		source2: 'assets/map elements/water L2.png'
+		source3: 'assets/map elements/water L3.png'
+		source4: 'assets/map elements/shipwreck (dome).png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/water flag 0.png'
+		flag2: 'assets/map elements/water flag 1.png'
+		
+	GridTile:
+		id: tile55
+		size:root.width/5,root.width/5
+		x:root.width/5*4
+		y:root.width/5*4 + root.y
+		position: 4,4
+		source0: 'blank.png'
+		source1: 'assets/map elements/water L1.png'
+		source2: 'assets/map elements/water L2.png'
+		source3: 'assets/map elements/water L3.png'
+		source4: 'assets/map elements/shipwreck (dome).png'
+		flag0: 'blank.png'
+		flag1: 'assets/map elements/water flag 0.png'
+		flag2: 'assets/map elements/water flag 1.png'
+		
+<Player>:
+		
+<NewGame>:
+	player0:player0
+	player1:player1
+	grid:grid
+	builder00: builder00
+	builder01: builder01
+	builder10: builder10
+	builder11: builder11
+	
+	canvas:
+		Rectangle:
+			pos:0,0
+			size:self.width, self.height
+			
+	#Player Initialization
+	Player:
+		id:player0
+		builder0:root.builder00
+		builder1:root.builder01
+		num:0
+		opponent:player1
+		hero:'Bacchus'
+	Player:
+		id:player1
+		builder0:root.builder10
+		builder1:root.builder11
+		num:1
+		opponent:player0
+		hero:'Mercury'
+	Grid:
+		id:grid
+		height:root.height
+		width:root.width
+		y: root.center_y - root.width/2 + root.width*251/1326/2 - self.width/1326*207/2
+		
+	#Builder Initialization
+    Builder:
+    	id: builder00
+		size:root.width/5,root.width/5
+    	x:root.width
+    	y:root.height
+    	player:player0
+    	num: 0
+    	type: 'worker ph.png'
+    Builder:
+    	id: builder01
+		size:root.width/5,root.width/5
+    	x:root.width
+    	y:root.height
+    	player:player0
+    	num:1
+    	type: 'worker ph.png'
+    Builder:
+    	id: builder10
+		size:root.width/5,root.width/5
+    	x:root.width
+    	y:root.height
+    	player:player1
+    	num:2
+    	type: 'worker ch.png'
+    Builder:
+    	id: builder11
+		size:root.width/5,root.width/5
+    	x:root.width
+    	y:root.height
+    	player:player1
+    	num:3
+    	type: 'worker ch.png'
+    Label:
+    	size: root.width, root.width/10
+    	pos:0, root.center_y
+    	font_size: root.width/10
+    	text:root.text
+    	color: 0,0,0,1
