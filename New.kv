@@ -60,49 +60,7 @@
 			source: 'assets/map elements/map.png'
 			pos:self.pos
 			size:self.width, self.width
-    	Rectangle:
-    		source: 'assets/ui panes and menus/Game Pane.png'
-			pos:0,0
-			size:self.width, self.width*324/1326
-		Rectangle:
-			source: 'assets/ui panes and menus/top_pane.png'
-			pos:0, self.height - self.width/1326*207
-			size:self.width, self.width/1326*207
-		#Counter for Pieces
-		Rectangle:
-			source: 'assets/numbers/'+str(int(((self.levelCap[0]-self.levelUsed[0]) - ((self.levelCap[0] - self.levelUsed[0]) % 10))/10))+'.png'
-			pos: self.width/1326*322,self.width/1326*(324-208)
-			size: self.width /1326*41, self.width/1326*52
-		Rectangle:
-			source: 'assets/numbers/'+str((self.levelCap[0] - self.levelUsed[0]) % 10)+'.png'
-			pos: self.width/1326*366,self.width/1326*(324-208)
-			size: self.width /1326*41, self.width/1326*52
-		Rectangle:
-			source: 'assets/numbers/'+str(int(((self.levelCap[1]-self.levelUsed[1]) - ((self.levelCap[1] - self.levelUsed[1]) % 10))/10))+'.png'
-			pos: self.width/1326*322,self.width/1326*(324-296)
-			size: self.width /1326*41, self.width/1326*52
-		Rectangle:
-			source: 'assets/numbers/'+str((self.levelCap[1] - self.levelUsed[1]) % 10)+'.png'
-			pos: self.width/1326*366,self.width/1326*(324-296)
-			size: self.width /1326*41, self.width/1326*52
 			
-		Rectangle:
-			source: 'assets/numbers/'+str(int(((self.levelCap[2]-self.levelUsed[2]) - ((self.levelCap[2] - self.levelUsed[2]) % 10))/10))+'.png'
-			pos: self.width/1326*553,self.width/1326*(324-208)
-			size: self.width /1326*41, self.width/1326*52
-		Rectangle:
-			source: 'assets/numbers/'+str((self.levelCap[2] - self.levelUsed[2]) % 10)+'.png'
-			pos: self.width/1326*597,self.width/1326*(324-208)
-			size: self.width /1326*41, self.width/1326*52
-			
-		Rectangle:
-			source: 'assets/numbers/'+str(int(((self.levelCap[3]-self.levelUsed[3]) - ((self.levelCap[3] - self.levelUsed[3]) % 10))/10))+'.png'
-			pos: self.width/1326*553,self.width/1326*(324-296)
-			size: self.width /1326*41, self.width/1326*52
-		Rectangle:
-			source: 'assets/numbers/'+str((self.levelCap[3] - self.levelUsed[3]) % 10)+'.png'
-			pos: self.width/1326*597,self.width/1326*(324-296)
-			size: self.width /1326*41, self.width/1326*52
 	GridTile:
 		id: tileHold
 		size:root.width/5,root.height/5
@@ -485,6 +443,90 @@
 		flag1: 'assets/map elements/water flag 0.png'
 		flag2: 'assets/map elements/water flag 1.png'
 		
+	Widget:
+		pos: root.pos
+		size: root.size
+		canvas:
+			Color:
+				rgba:1,1,1,1
+	    	Rectangle:
+	    		source: 'assets/ui panes and menus/Game Pane.png'
+				pos:0,0
+				size:self.width, self.width*324/1326
+			Rectangle:
+				source: 'assets/ui panes and menus/top_pane.png'
+				pos:0, self.height - self.width/1326*207
+				size:self.width, self.width/1326*207
+			#Counter for Pieces
+			Rectangle:
+				source:int(((root.levelCap[0]-root.levelUsed[0]) - ((root.levelCap[0] - root.levelUsed[0]) % 10))/10)*str( 'assets/numbers/'+str(int(((root.levelCap[0]-root.levelUsed[0]) - ((root.levelCap[0] - root.levelUsed[0]) % 10))/10))+'.png')+((int(((root.levelCap[0]-root.levelUsed[0]) - ((root.levelCap[0] - root.levelUsed[0]) % 10))/10)+1)%2)*'blank.png'
+				pos: root.width/1326*322,root.width/1326*(324-208)
+				size: root.width /1326*41, root.width/1326*52
+			Rectangle:
+				source: 'assets/numbers/'+str((root.levelCap[0] - root.levelUsed[0]) % 10)+'.png'
+				pos: root.width/1326*366,root.width/1326*(324-208)
+				size: root.width /1326*41, root.width/1326*52
+				
+			Rectangle:
+				source:int(((root.levelCap[1]-root.levelUsed[1]) - ((root.levelCap[1] - root.levelUsed[1]) % 10))/10)*str( 'assets/numbers/'+str(int(((root.levelCap[1]-root.levelUsed[1]) - ((root.levelCap[1] - root.levelUsed[1]) % 10))/10))+'.png')+((int(((root.levelCap[1]-root.levelUsed[1]) - ((root.levelCap[1] - root.levelUsed[1]) % 10))/10)+1)%2)*'blank.png'
+				pos: root.width/1326*322,root.width/1326*(324-296)
+				size: root.width /1326*41, root.width/1326*52
+			Rectangle:
+				source: 'assets/numbers/'+str((root.levelCap[1] - root.levelUsed[1]) % 10)+'.png'
+				pos: root.width/1326*366,root.width/1326*(324-296)
+				size: root.width /1326*41, root.width/1326*52
+				
+			Rectangle:
+				source:int(((root.levelCap[2]-root.levelUsed[2]) - ((root.levelCap[2] - root.levelUsed[2]) % 10))/10)*str( 'assets/numbers/'+str(int(((root.levelCap[2]-root.levelUsed[2]) - ((root.levelCap[2] - root.levelUsed[2]) % 10))/10))+'.png')+((int(((root.levelCap[2]-root.levelUsed[2]) - ((root.levelCap[2] - root.levelUsed[2]) % 10))/10)+1)%2)*'blank.png'
+				pos: root.width/1326*553,root.width/1326*(324-208)
+				size: root.width /1326*41, root.width/1326*52
+			Rectangle:
+				source: 'assets/numbers/'+str((root.levelCap[2] - root.levelUsed[2]) % 10)+'.png'
+				pos: root.width/1326*597,root.width/1326*(324-208)
+				size: root.width /1326*41, root.width/1326*52
+				
+			Rectangle:
+				source:int(((root.levelCap[3]-root.levelUsed[3]) - ((root.levelCap[3] - root.levelUsed[3]) % 10))/10)*str( 'assets/numbers/'+str(int(((root.levelCap[3]-root.levelUsed[3]) - ((root.levelCap[3] - root.levelUsed[3]) % 10))/10))+'.png')+((int(((root.levelCap[3]-root.levelUsed[3]) - ((root.levelCap[3] - root.levelUsed[3]) % 10))/10)+1)%2)*'blank.png'
+				pos: root.width/1326*553,root.width/1326*(324-296)
+				size: root.width /1326*41, root.width/1326*52
+			Rectangle:
+				source: 'assets/numbers/'+str((root.levelCap[3] - root.levelUsed[3]) % 10)+'.png'
+				pos: root.width/1326*597,root.width/1326*(324-296)
+				size: root.width /1326*41, root.width/1326*52
+			
+			#Timer
+			Rectangle:
+				source: 'assets/numbers/'+str(root.timer[0])+'.png'
+				pos: 0,0
+				size: root.width /1326*41, root.width/1326*52
+			Rectangle:
+				source: 'assets/numbers/'+str(root.timer[1])+'.png'
+				pos: root.width/1326*(597-553),0
+				size: root.width /1326*41, root.width/1326*52
+			Rectangle:
+				source: 'assets/numbers/'+str(root.timer[2])+'.png'
+				pos: 2*root.width/1326*(597-553),0
+				size: root.width /1326*41, root.width/1326*52
+			Rectangle:
+				source: 'assets/numbers/'+str(root.timer[3])+'.png'
+				pos: 3*root.width/1326*(597-553),0
+				size: root.width /1326*41, root.width/1326*52
+			Rectangle:
+				source: 'assets/numbers/'+str(root.timer[4])+'.png'
+				pos: 4*root.width/1326*(597-553),0
+				size: root.width /1326*41, root.width/1326*52
+			Rectangle:
+				source: 'assets/numbers/'+str(root.timer[5])+'.png'
+				pos: 5*root.width/1326*(597-553),0
+				size: root.width /1326*41, root.width/1326*52
+				
+#			Color:
+#				rgba: root.parent.player, 0, (root.parent.player + 1)%2,1
+#			Rectangle:
+#				source:'assets/numbers/' + str(root.parent.player) + '.png'
+#				pos:0,0
+#				size: self.width /1326*41, self.width/1326*52
+		
 <Player>:
 		
 <NewGame>:
@@ -495,6 +537,11 @@
 	builder01: builder01
 	builder10: builder10
 	builder11: builder11
+	#Extra Builders
+	builder02: builder02
+	builder03: builder03
+	builder12: builder12
+	builder13: builder13
 	
 	canvas:
 		Rectangle:
@@ -506,16 +553,22 @@
 		id:player0
 		builder0:root.builder00
 		builder1:root.builder01
+		#Extra Builders
+		builder2:root.builder02
+		builder3:root.builder03
 		num:0
 		opponent:player1
-		hero:'Bacchus'
+		hero:'Apollo'
 	Player:
 		id:player1
 		builder0:root.builder10
 		builder1:root.builder11
+		#Extra Builders
+		builder2:root.builder12
+		builder3:root.builder13
 		num:1
 		opponent:player0
-		hero:'Mercury'
+		hero:'Gaeae'
 	Grid:
 		id:grid
 		height:root.height
@@ -554,6 +607,39 @@
     	y:root.height
     	player:player1
     	num:3
+    	type: 'worker ch.png'
+    #Extra Builders
+    Builder:
+    	id: builder02
+		size:root.width/5,root.width/5
+    	x:root.width
+    	y:root.height
+    	player:player0
+    	num: 4
+    	type: 'worker ph.png'
+    Builder:
+    	id: builder03
+		size:root.width/5,root.width/5
+    	x:root.width
+    	y:root.height
+    	player:player0
+    	num:5
+    	type: 'worker ph.png'
+    Builder:
+    	id: builder12
+		size:root.width/5,root.width/5
+    	x:root.width
+    	y:root.height
+    	player:player1
+    	num:6
+    	type: 'worker ch.png'
+    Builder:
+    	id: builder13
+		size:root.width/5,root.width/5
+    	x:root.width
+    	y:root.height
+    	player:player1
+    	num:7
     	type: 'worker ch.png'
     Label:
     	size: root.width, root.width/10
