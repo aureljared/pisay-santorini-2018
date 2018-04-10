@@ -467,38 +467,38 @@
 			#Counter for Pieces
 			Rectangle:
 				source:int(((root.levelCap[0]-root.levelUsed[0]) - ((root.levelCap[0] - root.levelUsed[0]) % 10))/10)*str( 'assets/numbers/'+str(int(((root.levelCap[0]-root.levelUsed[0]) - ((root.levelCap[0] - root.levelUsed[0]) % 10))/10))+'.png')+((int(((root.levelCap[0]-root.levelUsed[0]) - ((root.levelCap[0] - root.levelUsed[0]) % 10))/10)+1)%2)*'blank.png'
-				pos: root.width/1326*322,root.width/1326*(324-208)
+				pos: root.width/1326*68,root.width/1326*(324-212)
 				size: root.width /1326*41, root.width/1326*52
 			Rectangle:
 				source: 'assets/numbers/'+str((root.levelCap[0] - root.levelUsed[0]) % 10)+'.png'
-				pos: root.width/1326*366,root.width/1326*(324-208)
+				pos: root.width/1326*112,root.width/1326*(324-212)
 				size: root.width /1326*41, root.width/1326*52
 				
 			Rectangle:
 				source:int(((root.levelCap[1]-root.levelUsed[1]) - ((root.levelCap[1] - root.levelUsed[1]) % 10))/10)*str( 'assets/numbers/'+str(int(((root.levelCap[1]-root.levelUsed[1]) - ((root.levelCap[1] - root.levelUsed[1]) % 10))/10))+'.png')+((int(((root.levelCap[1]-root.levelUsed[1]) - ((root.levelCap[1] - root.levelUsed[1]) % 10))/10)+1)%2)*'blank.png'
-				pos: root.width/1326*322,root.width/1326*(324-296)
+				pos: root.width/1326*68,root.width/1326*(324-300)
 				size: root.width /1326*41, root.width/1326*52
 			Rectangle:
 				source: 'assets/numbers/'+str((root.levelCap[1] - root.levelUsed[1]) % 10)+'.png'
-				pos: root.width/1326*366,root.width/1326*(324-296)
+				pos: root.width/1326*112,root.width/1326*(324-300)
 				size: root.width /1326*41, root.width/1326*52
 				
 			Rectangle:
 				source:int(((root.levelCap[2]-root.levelUsed[2]) - ((root.levelCap[2] - root.levelUsed[2]) % 10))/10)*str( 'assets/numbers/'+str(int(((root.levelCap[2]-root.levelUsed[2]) - ((root.levelCap[2] - root.levelUsed[2]) % 10))/10))+'.png')+((int(((root.levelCap[2]-root.levelUsed[2]) - ((root.levelCap[2] - root.levelUsed[2]) % 10))/10)+1)%2)*'blank.png'
-				pos: root.width/1326*553,root.width/1326*(324-208)
+				pos: root.width/1326*257,root.width/1326*(324-212)
 				size: root.width /1326*41, root.width/1326*52
 			Rectangle:
 				source: 'assets/numbers/'+str((root.levelCap[2] - root.levelUsed[2]) % 10)+'.png'
-				pos: root.width/1326*597,root.width/1326*(324-208)
+				pos: root.width/1326*301,root.width/1326*(324-212)
 				size: root.width /1326*41, root.width/1326*52
 				
 			Rectangle:
 				source:int(((root.levelCap[3]-root.levelUsed[3]) - ((root.levelCap[3] - root.levelUsed[3]) % 10))/10)*str( 'assets/numbers/'+str(int(((root.levelCap[3]-root.levelUsed[3]) - ((root.levelCap[3] - root.levelUsed[3]) % 10))/10))+'.png')+((int(((root.levelCap[3]-root.levelUsed[3]) - ((root.levelCap[3] - root.levelUsed[3]) % 10))/10)+1)%2)*'blank.png'
-				pos: root.width/1326*553,root.width/1326*(324-296)
+				pos: root.width/1326*257,root.width/1326*(324-300)
 				size: root.width /1326*41, root.width/1326*52
 			Rectangle:
 				source: 'assets/numbers/'+str((root.levelCap[3] - root.levelUsed[3]) % 10)+'.png'
-				pos: root.width/1326*597,root.width/1326*(324-296)
+				pos: root.width/1326*301,root.width/1326*(324-300)
 				size: root.width /1326*41, root.width/1326*52
 			
 	Widget:
@@ -568,13 +568,13 @@
 				angle: 45
 				origin: self.pos
 	Widget
-		pos: root.parent.width/1326*967, root.parent.width/1326*87
-		size: root.parent.width /1326*86, root.parent.width/1326*86
+		pos: root.parent.width/1326*964, root.parent.width/1326*84
+		size: root.parent.width /1326*92, root.parent.width/1326*92
 		canvas:
 			Color:
 				rgba:1,1,1,int(root.skillActive)
 			Ellipse:
-				#source: int(root.players[root.player].skillActive)*'assets/buttons/power.png'
+				source: 'assets/buttons/god power button pressed.png' * int(root.skillActive) 
 				size: self.size
 				pos: self.pos
 		

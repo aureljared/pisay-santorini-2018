@@ -9,6 +9,10 @@ Need:
 	Fix positioning of Widgets
 	Add Options screen
 
+Notes:
+	Bacchus op
+	Janus noob
+
 Draw Phase
 Game Phase
 Game doesn't restart

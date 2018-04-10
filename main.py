@@ -3,7 +3,7 @@ kivy.require('1.9.2')
 
 from kivy.config import Config
 Config.read('config.ini')
-Config.set('modules','screen','ipad,portrait')
+Config.set('modules','screen','onex, portrait')
 Config.write()
 from random import randint
 from random import sample
@@ -51,19 +51,27 @@ class Builder(Widget):
 	#isBordering
 	
 	def isAdjacentToFriendlyTerritory(self):
+		'''
+		Returns true if a builder is adjacent, in the four cardinal directions or in the four diagonal directions, to friendly territory.
+		A territory is described as friendly if it was last built on by a builder owned by this player.
+		'''
 		x = int(self.tile.getX())
 		y = int(self.tile.getY())
 		
 		for i in (-1,0,1):
 			for j in (-1,0,1):
 				if x+i ==-1 or y+j == -1 or x+i == 5 or y+j == 5:
-					pass
+					continue
 				elif self.tile.getGrid().getTile(x + i, y + j).owner is not None:
 					if self.tile.getGrid().getTile(x + i, y + j).owner.num == self.player.num:
 						return True
 		return False
 		
 	def isAdjacentToEnemyTerritory(self):
+		'''
+		Returns true if a builder is adjacent, in the four cardinal directions or in the four diagonal directions, to enemy territory.
+		A territory is described as enemy if it was last built on by a builder owned by another player.
+		'''
 		x = int(self.tile.getX())
 		y = int(self.tile.getY())
 		
@@ -77,6 +85,10 @@ class Builder(Widget):
 		return False
 	
 	def isBorderingFriendlyTerritory(self):
+		'''
+		Returns true if a builder is bordering, in the four cardinal directions, friendly territory.
+		A territory is described as friendly if it was last built on by a builder owned by this player.
+		'''
 		x = int(self.tile.getX())
 		y = int(self.tile.getY())
 		
@@ -92,6 +104,10 @@ class Builder(Widget):
 		return False
 		
 	def isBorderingEnemyTerritory(self):
+		'''
+		Returns true if a builder is bordering, in the four cardinal directions, enemy territory.
+		A territory is descibed as enemy if it was last built on by a builder owned by another player.
+		'''
 		x = int(self.tile.getX())
 		y = int(self.tile.getY())
 		
@@ -107,12 +123,15 @@ class Builder(Widget):
 		return False
 		
 	def isAdjacentToFriendlyBuilder(self):
+		'''
+		Returns true if a builder is adjacent, in the four cardinal directions or in the four diagonal directions, to a friendly builder.
+		'''
 		x = int(self.tile.getX())
 		y = int(self.tile.getY())
 		
 		for i in (-1,0,1):
 			for j in (-1,0,1):
-				if x+i ==-1 or y+j == -1 or x+i == 5 or y+j == 5:
+				if x+i ==-1 or y+j == -1 or x+i == 5 or y+j == 5 or i == 0 and j == 0:
 					pass
 				elif self.tile.getGrid().getTile(x + i, y + j).isOccupied():
 					if self.tile.getGrid().getTile(x + i, y + j).getOccupier().player.num == self.player.num:
@@ -120,12 +139,15 @@ class Builder(Widget):
 		return False
 		
 	def isAdjacentToEnemyBuilder(self):
+		'''
+		Returns true if a builder is adjacent, in the four cardinal directions or in the four diagonal directions, to an enemy builder.
+		'''
 		x = int(self.tile.getX())
 		y = int(self.tile.getY())
 		
 		for i in (-1,0,1):
 			for j in (-1,0,1):
-				if x+i ==-1 or y+j == -1 or x+i == 5 or y+j == 5:
+				if x+i ==-1 or y+j == -1 or x+i == 5 or y+j == 5 or i == 0 and j == 0:
 					pass
 				elif self.tile.getGrid().getTile(x + i, y + j).isOccupied():
 					if self.tile.getGrid().getTile(x + i, y + j).getOccupier().player.num != self.player.num:
@@ -133,6 +155,9 @@ class Builder(Widget):
 		return False
 		
 	def isBorderingFriendlyBuilder(self):
+		'''
+		Returns true if a builder is bordering, in the four cardinal directions, a friendly builder.
+		'''
 		x = int(self.tile.getX())
 		y = int(self.tile.getY())
 		
@@ -140,7 +165,7 @@ class Builder(Widget):
 			for j in (-1,0,1):
 				if i != 0 and j != 0:
 					pass
-				elif x+i ==-1 or y+j == -1 or x+i == 5 or y+j == 5:
+				elif x+i ==-1 or y+j == -1 or x+i == 5 or y+j == 5 or i == 0 and j == 0:
 					pass
 				elif self.tile.getGrid().getTile(x + i, y + j).isOccupied():
 					if self.tile.getGrid().getTile(x + i, y + j).getOccupier().player.num == self.player.num:
@@ -148,6 +173,9 @@ class Builder(Widget):
 		return False
 		
 	def isBorderingEnemyBuilder(self, count):
+		'''
+		Returns true if a builder is bordering, in the four cardinal directions, an enemy builder.
+		'''
 		x = int(self.tile.getX())
 		y = int(self.tile.getY())
 		n = 0
@@ -156,7 +184,7 @@ class Builder(Widget):
 			for j in (-1,0,1):
 				if i != 0 and j != 0:
 					pass
-				elif x+i ==-1 or y+j == -1 or x+i == 5 or y+j == 5:
+				elif x+i ==-1 or y+j == -1 or x+i == 5 or y+j == 5 or i == 0 and j == 0:
 					pass
 				elif self.tile.getGrid().getTile(x + i, y + j).isOccupied():
 					if self.tile.getGrid().getTile(x + i, y + j).getOccupier().player.num != self.player.num:
@@ -166,6 +194,9 @@ class Builder(Widget):
 		return False
 	
 	def die(self):
+		'''
+		Removes this builder from the game.
+		'''
 		self.tile.unoccupy()
 		self.tile = None
 		self.isActive = False
@@ -188,7 +219,7 @@ class Builder(Widget):
 		#Checks wether your Builder is adjacent to a Builder owned by an enemy Bacchus
 		#If Yes, your Builder can't move vertically or horizontally
 		if self.player.opponent.hero == 'Bacchus':
-			if self.isAdjacentToEnemyBuilder():
+			if self.isBorderingEnemyBuilder():
 				if self.tile.getX() == xInt or self.tile.getY() == yInt:
 					valid = False
 		##
@@ -266,6 +297,9 @@ class Builder(Widget):
 		return valid
 	
 	def moveBuilder(self, xInt, yInt):
+		'''
+		Moves this builder to a tile with the specified x and y coordinates.
+		'''
 		if self.canMoveTo(xInt, yInt):
 			
 			#Apollo
@@ -283,15 +317,27 @@ class Builder(Widget):
 		return False
 	
 	def setTile(self, tile):
+		'''
+		Sets the tile that the builder is on.
+		'''
 		self.tile = tile
 	
 	def getTile(self):
+		'''
+		Gets the tile that the builder is on.
+		'''
 		return self.tile
 		
 	def getPlayer(self):
+		'''
+		Gets the player that owns the builder.
+		'''
 		return self.player
 		
 	def getNum(self):
+		'''
+		Gets the number assigned to this builder for identification.
+		'''
 		return self.num
 
 class GridTile(Widget):
@@ -320,6 +366,9 @@ class GridTile(Widget):
 	#May need check methods similar to those in Builder
 	
 	def isBorderingBuilder(self, num):
+		'''
+		Returns true if a builder is bordering, in the four cardinal directions, a builder.
+		'''
 		x = int(self.getX())
 		y = int(self.getY())
 		
@@ -327,7 +376,23 @@ class GridTile(Widget):
 			for j in (-1,0,1):
 				if i != 0 and j != 0:
 					pass
-				elif x+i ==-1 or y+j == -1 or x+i == 5 or y+j == 5:
+				elif x+i ==-1 or y+j == -1 or x+i == 5 or y+j == 5 or i == 0 and j == 0:
+					pass
+				elif self.getGrid().getTile(x + i, y + j).isOccupied():
+					if self.getGrid().getTile(x + i, y + j).getOccupier().player.num == num:
+						return True
+		return False
+		
+	def isAdjacentToBuilder(self, num):
+		'''
+		Returns true if a builder is adjacent, in the four cardinal directions or in the four diagonal directions, to a builder.
+		'''
+		x = int(self.tile.getX())
+		y = int(self.tile.getY())
+		
+		for i in (-1,0,1):
+			for j in (-1,0,1):
+				if x+i ==-1 or y+j == -1 or x+i == 5 or y+j == 5:
 					pass
 				elif self.getGrid().getTile(x + i, y + j).isOccupied():
 					if self.getGrid().getTile(x + i, y + j).getOccupier().player.num == num:
@@ -337,6 +402,9 @@ class GridTile(Widget):
 	##
 	
 	def build(self):
+		'''
+		Increases the level of the building on this tile if it is not at level 3, and builds a dome otherwise.
+		'''
 		if self.level < 3:
 			self.level += 1
 			self.grid.tileUsed(self.level)
@@ -346,44 +414,81 @@ class GridTile(Widget):
 			raise Exception
 			
 	def dome(self):
+		'''
+		Adds a dome to this grid tile.
+		'''
 		self.grid.tileUsed(4)
 		self.domed = True
 			
 	def getLevel(self):
+		'''
+		Gets the level of the building on this tile.
+		'''
 		return self.level
 		
 	def getOccupier(self):
+		'''
+		Gets which builder occupies this tile.
+		'''
+		#Verify the documentation
 		return self.occupier
 		
 	def isDomed(self):
+		'''
+		Returns true if this grid tile has a dome.
+		'''
 		return self.domed
 		
 	def isOccupied(self):
+		'''
+		Checks if this tile is occupied by a builder.
+		'''
 		return self.occupied
 	
 	def setGrid(self, grid):
+		'''
+		Sets the grid on which this tile is on.
+		'''
 		self.grid = grid
 	
 	def getGrid(self):
+		'''
+		Gets the grid on which this tile is on.
+		'''
 		return self.grid
 		
 	def getX(self):
+		'''
+		Gets the x-cooridinate of this tile.
+		'''
 		return self.position[0]
 	
 	def getY(self):
+		'''
+		Gets the y-cooridinate of this tile.
+		'''
 		return self.position[1]
 		
 	def occupy(self, builder):
+		'''
+		Changes the status of the tile as being occupied by a given builder.
+		'''
 		self.occupied = True
 		self.occupier = builder
 		self.occupier.setTile(self)
 		builder.pos = self.pos
 		
 	def unoccupy(self):
+		'''
+		Changes the status of the tile as no longer being occupied by a given builder.
+		'''
 		self.occupied = False
 		self.occupier = None
 		
 class Grid(Widget):
+	'''
+	A representation of the 5 by 5 grid used in the game.
+	'''
 	
 	tileHold = ObjectProperty(None)
 	tile11=ObjectProperty(None)
@@ -422,32 +527,65 @@ class Grid(Widget):
 	timer = ListProperty([0,0,0,0,0,0])
 	
 	def setTileGrid(self):
+		'''
+		Sets the tile grid.
+		'''
 		for y in self.matrix:
 			for x in y:
 				x.setGrid(self)
 
 	def setMatrix(self, matrix):
+		'''
+		Sets the matrix of the tile grid.
+		'''
 		self.matrix = matrix
 	
 	def getTile(self, x, y):
+		'''
+		Gets the tile with the specified x and y coordinates in that order.
+		'''
 		return self.matrix[x][y]
 		
 	def getUsed(self, level):
+		'''
+		Gets the current number of used tiles of a given building level.
+		'''
 		return self.levelUsed[level]
+		
+	def getUnused(self, level):
+		'''
+		Gets the current number of unused tiles of a given building level.
+		'''
+		return self.levelCap[level] - self.levelUsed[level]
 	
 	def getCap(self, level):
+		'''
+		Gets the maximum number of tiles of a given building level.
+		'''
 		return self.levelCap[level]
 		
 	def tileUsed(self, level):
+		'''
+		Uses a tile of a given building level.
+		'''
 		self.levelUsed[level - 1] += 1
 	
 	def getX(self):
+		'''
+		Gets the x-coordinate of the graphical representation of the widget of the grid.
+		'''
 		return self.x
 		
 	def getY(self):
+		'''
+		Gets the y-coordinate of the graphical representation of the widget of the grid.
+		'''
 		return self.y
 		
 class Player(Widget):
+	'''
+	A representation of the players interacting with the game.
+	'''
 	grid = ObjectProperty(None)
 	num = NumericProperty(0)
 	builder0 = ObjectProperty(None)
@@ -467,18 +605,30 @@ class Player(Widget):
 	maxActive = NumericProperty(1)
 	
 	def move(self):
+		'''
+		Depreciated. Do not use.
+		'''
 		pass
 		
 	def build(self):
+		'''
+		Depreciated. Do not use.
+		'''
 		pass
 		
 	def checkWin(self):
+		'''
+		Checks whether this player satisfies a win condition.
+		'''
 		for k in self.builder:
 			if k.isActive:
 				if k.getTile().getLevel() == 3:
 					return True
 		
 	def checkLose(self):
+		'''
+		Checks whether this player satisfies a lose condition.
+		'''
 		canMove = False
 		x = []
 		y = []
@@ -546,7 +696,7 @@ class NewGame(Widget):
 			
 			#Set Skill cap here
 			elif player.hero == 'Artemis':
-				player.maxActive = 1
+				player.maxActive = 2
 				
 		self.player0.isCurrent = True
 	
@@ -635,10 +785,18 @@ class NewGame(Widget):
 					#Skill Deactivate
 					if self.players[self.player].skillActive:
 						self.players[self.player].skillActive = False
+						
+						if self.players[self.player].hero == 'Artemis' and self.gPhase == 2 and self.players[self.player].activatedSkill == 1:
+							self.gPhase = 3
+							self.players[self.player].activatedSkill -= 1
 					
 					#Skill Activate
 					else:
 						self.players[self.player].skillActive = True
+						
+						if self.players[self.player].hero == 'Artemis' and self.gPhase == 3:
+							self.gPhase = 2
+							self.players[self.player].activatedSkill += 1
 			
 			#Initial Phase
 			elif self.gPhase == 0:
@@ -685,10 +843,15 @@ class NewGame(Widget):
 					#Artemis
 					#Checks if skill is Active and has not been used yet.
 					#If Yes, move again
-					if self.players[self.player].hero == 'Artemis' and self.players[self.player].skillActive and self.players[self.player].activatedSkill < 1:
-						self.players[self.player].skillActive = False
-						self.players[self.player].activatedSkill += 1
-						self.gPhase = 2
+					if self.players[self.player].hero == 'Artemis' and self.players[self.player].skillActive:
+						if self.players[self.player].activatedSkill == 0:
+							self.players[self.player].activatedSkill += 2
+							self.players[self.player].skillActive = False
+							self.gPhase = 2
+						else: 
+							self.players[self.player].activatedSkill += 1
+							self.players[self.player].skillActive = False
+							self.gPhase = 3
 					##
 					
 					else:
