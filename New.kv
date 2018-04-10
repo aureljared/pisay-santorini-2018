@@ -21,7 +21,7 @@
 <Builder>:
 	canvas:
 		Color:
-			rgba: 1 + 0.2*float(self.isSelected),1 + 0.2*float(self.isSelected),1 + 0.2*float(self.isSelected),1
+			rgba: 1 + 0.2*float(self.isSelected),1 + 0.2*float(self.isSelected),1 + 0.2*float(self.isSelected),float(self.isActive)
 		Rectangle:
 			source: root.type
 			pos:self.pos
@@ -450,13 +450,20 @@
 			Color:
 				rgba:1,1,1,1
 	    	Rectangle:
-	    		source: 'assets/ui panes and menus/Game Pane.png'
+	    		source: 'assets/ui panes and menus/game_pane.png'
 				pos:0,0
 				size:self.width, self.width*324/1326
 			Rectangle:
 				source: 'assets/ui panes and menus/top_pane.png'
 				pos:0, self.height - self.width/1326*207
 				size:self.width, self.width/1326*207
+				
+	Widget:
+		pos: 0,0
+		size: root.size
+		canvas:
+			Color:
+				rgba:1,1,1,1
 			#Counter for Pieces
 			Rectangle:
 				source:int(((root.levelCap[0]-root.levelUsed[0]) - ((root.levelCap[0] - root.levelUsed[0]) % 10))/10)*str( 'assets/numbers/'+str(int(((root.levelCap[0]-root.levelUsed[0]) - ((root.levelCap[0] - root.levelUsed[0]) % 10))/10))+'.png')+((int(((root.levelCap[0]-root.levelUsed[0]) - ((root.levelCap[0] - root.levelUsed[0]) % 10))/10)+1)%2)*'blank.png'
@@ -494,31 +501,37 @@
 				pos: root.width/1326*597,root.width/1326*(324-296)
 				size: root.width /1326*41, root.width/1326*52
 			
+	Widget:
+		pos: 0, root.height-root.y
+		size: root.size
+		canvas:
+			Color:
+				rgba:1,1,1,1
 			#Timer
 			Rectangle:
 				source: 'assets/numbers/'+str(root.timer[0])+'.png'
-				pos: 0,0
+				pos: self.x, self.y
 				size: root.width /1326*41, root.width/1326*52
 			Rectangle:
 				source: 'assets/numbers/'+str(root.timer[1])+'.png'
-				pos: root.width/1326*(597-553),0
+				pos: self.x + root.width/1326*(597-553),self.y
 				size: root.width /1326*41, root.width/1326*52
 			Rectangle:
 				source: 'assets/numbers/'+str(root.timer[2])+'.png'
-				pos: 2*root.width/1326*(597-553),0
+				pos: self.x + 2*root.width/1326*(597-553),self.y
 				size: root.width /1326*41, root.width/1326*52
 			Rectangle:
 				source: 'assets/numbers/'+str(root.timer[3])+'.png'
-				pos: 3*root.width/1326*(597-553),0
+				pos: self.x + 3*root.width/1326*(597-553),self.y
 				size: root.width /1326*41, root.width/1326*52
-			Rectangle:
-				source: 'assets/numbers/'+str(root.timer[4])+'.png'
-				pos: 4*root.width/1326*(597-553),0
-				size: root.width /1326*41, root.width/1326*52
-			Rectangle:
-				source: 'assets/numbers/'+str(root.timer[5])+'.png'
-				pos: 5*root.width/1326*(597-553),0
-				size: root.width /1326*41, root.width/1326*52
+#			Rectangle:
+#				source: 'assets/numbers/'+str(root.timer[4])+'.png'
+#				pos: 4*root.width/1326*(597-553),0
+#				size: root.width /1326*41, root.width/1326*52
+#			Rectangle:
+#				source: 'assets/numbers/'+str(root.timer[5])+'.png'
+#				pos: 5*root.width/1326*(597-553),0
+#				size: root.width /1326*41, root.width/1326*52
 				
 #			Color:
 #				rgba: root.parent.player, 0, (root.parent.player + 1)%2,1
@@ -528,6 +541,42 @@
 #				size: self.width /1326*41, self.width/1326*52
 		
 <Player>:
+	canvas.before:
+		PushMatrix
+		Rotate:
+			angle: 352.2
+			origin: self.pos
+	canvas.after:
+		PopMatrix
+	canvas:
+		Color:
+			rgba: 0.25 + 0.5*float(self.num),0.25,0.75-0.5*float(self.num), self.isCurrent
+		Rectangle:
+			pos: self.pos
+			size: self.size
+		Color:
+			rgba:5,5,5,self.isCurrent
+		Rectangle:
+			source: 'assets/generals/'+root.hero+'.png'
+			pos: self.pos
+			size: self.size
+		Rectangle:
+			source: 'assets/ui panes and menus/tape.png'
+			size: self.width/2.5,self.width/78*66/2.5
+			pos: self.x + self.width - self.width/191*51, self.y- self.width/191*22
+			Rotate:
+				angle: 45
+				origin: self.pos
+	Widget
+		pos: root.parent.width/1326*967, root.parent.width/1326*87
+		size: root.parent.width /1326*86, root.parent.width/1326*86
+		canvas:
+			Color:
+				rgba:1,1,1,int(root.skillActive)
+			Ellipse:
+				#source: int(root.players[root.player].skillActive)*'assets/buttons/power.png'
+				size: self.size
+				pos: self.pos
 		
 <NewGame>:
 	player0:player0
@@ -542,11 +591,20 @@
 	builder03: builder03
 	builder12: builder12
 	builder13: builder13
+	drawn0:drawn0
+	drawn1:drawn1
+	drawn2:drawn2
+	powerButton:powerButton
 	
 	canvas:
 		Rectangle:
 			pos:0,0
 			size:self.width, self.height
+	Grid:
+		id:grid
+		height:root.height
+		width:root.width
+		y: root.center_y - root.width/2 + root.width*251/1326/2 - self.width/1326*207/2
 			
 	#Player Initialization
 	Player:
@@ -558,7 +616,10 @@
 		builder3:root.builder03
 		num:0
 		opponent:player1
-		hero:'Apollo'
+		hero:'Vanilla'
+		isCurrent:True
+		pos: root.width/1326*1074, root.width/1326*73
+		size: root.width /1326*191, root.width/1326*251
 	Player:
 		id:player1
 		builder0:root.builder10
@@ -568,12 +629,57 @@
 		builder3:root.builder13
 		num:1
 		opponent:player0
-		hero:'Gaeae'
-	Grid:
-		id:grid
-		height:root.height
-		width:root.width
-		y: root.center_y - root.width/2 + root.width*251/1326/2 - self.width/1326*207/2
+		hero:'Vanilla'
+		pos: root.width/1326*1074, root.width/1326*73
+		size: root.width /1326*191, root.width/1326*251
+		
+	Widget
+		id: powerButton
+		pos: root.width/1326*975, root.width/1326*94
+		size: root.width /1326*86, root.width/1326*86
+		
+	Widget:
+		id:drawn0
+		size: root.width /1326*300, root.width/1326*400
+		pos: root.center_x - (root.width/4+self.width/2), root.center_y - (self.height/2)
+		canvas:
+			Color:
+				rgba: 1,1,1,root.screen
+			Rectangle:
+				size: self.size
+				pos: root.center_x - (root.width/4+self.width/2), root.center_y - (self.height/2)
+			Rectangle:
+				source: 'assets/generals/'+root.hero0+'.png'
+				size: self.size
+				pos: root.center_x - (root.width/4+self.width/2), root.center_y - (self.height/2)
+	Widget:
+		id:drawn1
+		size: root.width /1326*300, root.width/1326*400
+		pos: root.center_x - (self.width/2), root.center_y - (self.height/2)
+		canvas:
+			Color:
+				rgba: 1,1,1,int(root.screen == 1)
+			Rectangle:
+				size: self.size
+				pos: root.center_x - (self.width/2), root.center_y - (self.height/2)
+			Rectangle:
+				source: 'assets/generals/'+root.hero1+'.png'
+				size: self.size
+				pos: root.center_x - (self.width/2), root.center_y - (self.height/2)
+	Widget:
+		id:drawn2
+		size: root.width /1326*300, root.width/1326*400
+		pos: root.center_x - (-root.width/4+self.width/2), root.center_y - (self.height/2)
+		canvas:
+			Color:
+				rgba: 1,1,1,int(root.screen==1)
+			Rectangle:
+				size: self.size
+				pos: root.center_x - (-root.width/4+self.width/2), root.center_y - (self.height/2)
+			Rectangle:
+				source: 'assets/generals/'+root.hero2+'.png'
+				size: self.size
+				pos: root.center_x - (-root.width/4+self.width/2), root.center_y - (self.height/2)
 		
 	#Builder Initialization
     Builder:
@@ -616,6 +722,7 @@
     	y:root.height
     	player:player0
     	num: 4
+    	isActive:False
     	type: 'worker ph.png'
     Builder:
     	id: builder03
@@ -624,6 +731,7 @@
     	y:root.height
     	player:player0
     	num:5
+    	isActive:False
     	type: 'worker ph.png'
     Builder:
     	id: builder12
@@ -632,6 +740,7 @@
     	y:root.height
     	player:player1
     	num:6
+    	isActive:False
     	type: 'worker ch.png'
     Builder:
     	id: builder13
@@ -640,6 +749,7 @@
     	y:root.height
     	player:player1
     	num:7
+    	isActive:False
     	type: 'worker ch.png'
     Label:
     	size: root.width, root.width/10

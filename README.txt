@@ -1,22 +1,60 @@
-Version: alpha0.1.4
+Version: alpha0.1.7
 
 Updates from previous version:
-	Fixed Building bug
+	Added Atlas
+	Added Artemis (incomplete)
+	Added Activating Skill
 
-Working grid
+Need:
+	Fix positioning of Widgets
+	Add Options screen
+
+Draw Phase
+Game Phase
 Game doesn't restart
-Will have to fix builder placement order
 Panels: no interactions yet (the top panel is only an image)
 
 
 For Hero implementation:
-Add Heroes as you wish
-Built functions for checking surrounding or bordering
+	Add Heroes as you wish
+	For Athena: 
+		I suggest you use skillActive in Player for when any of your Builder moves up.
+		Then do the check on opponents turn (Similar to Bacchus) for skillActive
+	For Pan: 
+		I suggest you use skillActive in Player for when any of your Builder moves down two levels.
+		Then add a check in checkWin() in Player for skillActive
+	For Hephaestus:
+		Append Hephaestus to active heroes.
+		Before #End of current Player's Turn:
+			If skillActive and selected GridTile.level < 3:
+				build()
+	For Prometheus:
+		Append Prometheus to active heroes.
+		Set maxActive in NewGame.start()
+		In #Skill Activate:
+			set to Build Phase
+		In #Build Phase:
+			Before #End of current Player's Turn:
+				Do similar to #Artemis
+		In #Skill Deactivate:
+			set to Move Phase
+		In canMoveTo() inBuilder:
+			If activatedSkill is equal to maxActive:
+				Movkng up is invalid
+				
+
+To add active heroes:
+	In main.py:
+		Find: #Add Active heroes here
+		Append your hero to: activeHeroes
 
 To test:
-	In New.kv:
-		Find Player Initialization
-		Change any of the Players' hero attribute
+	In main.py:
+		Find #Test heroes
+		Comment out: drawn = sample(self.heroes,3)
+		Uncomment: #drawn = ['Apollo', 'Artemis', 'Atlas']
+		Modify elements to heroes you want to test
+		NOTE: this list needs to have a length of 3
 	Run main.py
 	
 Sample Heroes
@@ -26,7 +64,7 @@ Bacchus:
 Mercury:
 	When your Builders are adjacent to a GridTile with your Flag, they gain +1 movement range
 	
-Gaeae:
+Graeae:
 	Get an extra Builder
 	During Build Phase, any of your Builders may be used to build
 	
@@ -35,3 +73,12 @@ Janus:
 	
 Apollo:
 	Your Builder may Move onto an Enemy Builder's space by forcing their Builder to move to the space you just vacated
+	
+Phobos and Deimos:
+	At the end of your turn, kill enemy Builders bordering two of your Builders.
+	
+Atlas:
+	Your Builder may build a dome at any level
+	
+Artemis:
+	Your Builder may move one additional time, (but not back to its original space #Haven't implemented yet)
