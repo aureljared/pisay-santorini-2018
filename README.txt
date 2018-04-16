@@ -1,13 +1,15 @@
 Version: alpha0.1.7
 
 Updates from previous version:
-	Added Atlas
-	Added Artemis (incomplete)
-	Added Activating Skill
+	Added Game menus
+	Added 2-4 player support
+	implemented End Turn and Undo Move
 
 Need:
-	Fix positioning of Widgets
-	Add Options screen
+	Feddback Mechanism (Game Texts)
+	Game SetUp
+	Toggles in Settings
+	Concede and Quit Game in Options
 
 Notes:
 	Bacchus op

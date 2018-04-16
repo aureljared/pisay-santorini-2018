@@ -3,20 +3,21 @@ kivy.require('1.9.2')
 
 from kivy.config import Config
 Config.read('config.ini')
-Config.set('modules','screen','onex, portrait')
+#Config.set('modules','screen','onex, portrait')
 Config.write()
 from random import randint
 from random import sample
 from kivy.app import App
 from kivy.uix.label import Label
 from kivy.uix.widget import Widget
+from kivy.uix.slider import Slider
+from kivy.uix.behaviors import ButtonBehavior
 from kivy.properties import NumericProperty, ReferenceListProperty, ListProperty, ObjectProperty, BooleanProperty, StringProperty
 from kivy.vector import Vector
 from kivy.clock import Clock
 from kivy.graphics import *
 from kivy.core.window import Window
-from kivy.app import App
-from kivy.uix.label import Label
+#from kivy.core.sound import SoundLoader
 
 #EDIT
 #Add a ListProperty for Hero names in NewGame
@@ -34,6 +35,7 @@ class Builder(Widget):
 	tile=ObjectProperty(None, allownone = True)
 	isSelected=BooleanProperty(False)
 	isActive=BooleanProperty(True)
+	tileSave=ObjectProperty(None, allownone = True)
 	
 	#EDIT
 	#Methods you can add
@@ -359,8 +361,14 @@ class GridTile(Widget):
 	flag0 = StringProperty('')
 	flag1 = StringProperty('')
 	flag2 = StringProperty('')
-	flags = ReferenceListProperty(flag0, flag1, flag2)
+	flag3 = StringProperty('')
+	flag4 = StringProperty('')
+	flags = ReferenceListProperty(flag0, flag1, flag2, flag3, flag4)
 	owner = ObjectProperty(None, allownone = True)
+	levelSave = NumericProperty(0)
+	domedSave = BooleanProperty(False)
+	flagSave = NumericProperty(0)
+	ownerSave = ObjectProperty(None, allownone = True)
 	
 	#EDIT
 	#May need check methods similar to those in Builder
@@ -400,6 +408,9 @@ class GridTile(Widget):
 		return False
 		
 	##
+	def unflag(self):
+		self.flag = 0
+		self.owner = None
 	
 	def build(self):
 		'''
@@ -586,8 +597,11 @@ class Player(Widget):
 	'''
 	A representation of the players interacting with the game.
 	'''
+	color = ListProperty([0,0,0])
 	grid = ObjectProperty(None)
 	num = NumericProperty(0)
+	type = StringProperty('')
+	isActive = BooleanProperty(False)
 	builder0 = ObjectProperty(None)
 	builder1 = ObjectProperty(None)
 	
@@ -649,23 +663,17 @@ class NewGame(Widget):
 	text = StringProperty('')
 	player0 = ObjectProperty(None)
 	player1 = ObjectProperty(None)
-	players = ReferenceListProperty(player0, player1)
+	player2 = ObjectProperty(None)
+	player3 = ObjectProperty(None)
+	players = ReferenceListProperty(player0, player1, player2, player3)
 	grid = ObjectProperty(None)
+	playerCount = NumericProperty(4)
 	gPhase = 0
-	screen = NumericProperty(1)
+	screen = NumericProperty(4)
 	current = NumericProperty(0) #Builder selected
-	player = NumericProperty(0) #Current Player (0, 1) 0 is named Player1, 1 is Player2
+	currentPlayer = NumericProperty(0) #Current Player (0, 1) 0 is named Player1, 1 is Player2
 	xP=NumericProperty(0)
 	yP=NumericProperty(0)
-	builder00=ObjectProperty(None)
-	builder01=ObjectProperty(None)
-	builder10=ObjectProperty(None)
-	builder11=ObjectProperty(None)
-	builder02=ObjectProperty(None)
-	builder03=ObjectProperty(None)
-	builder12=ObjectProperty(None)
-	builder13=ObjectProperty(None)
-	builder = ReferenceListProperty(builder00, builder01, builder10, builder11,builder02, builder03, builder12, builder13)
 	heroes = ListProperty(['Bacchus','Mercury','Graeae','Janus','Apollo','Phobos and Deimos','Atlas','Artemis'])
 	#Add Active heroes here
 	activeHeroes = ['Atlas', 'Artemis']
@@ -673,21 +681,80 @@ class NewGame(Widget):
 	hero1 = StringProperty('')
 	hero2 = StringProperty('')
 	drawnHeroes = ReferenceListProperty(hero0, hero1, hero2)
+	#buildFX = SoundLoader.load('assets/sound fx/building fx.mp3')
 	
+	def start(self):
+		for i in range(self.playerCount):
+			self.players[i].isActive = True
+		self.drawHeroes()
+		
 	def drawHeroes(self):
 		drawn = sample(self.heroes,3)
 		#Test Heroes
-		#drawn = ['Apollo', 'Artemis', 'Atlas']
+		#drawn = ['Vanilla', 'Vanilla', 'Vanilla']
 		for i in range(3):
 			self.drawnHeroes[i] = drawn[i]
+			
+	def saveState(self):
+		for player in self.players:
+			if player.isActive:
+				for builder in player.builder:
+					if builder.isActive:
+						builder.tileSave = builder.tile
+		for y in self.grid.matrix:
+			for x in y:
+				x.levelSave = x.level
+				x.domedSave = x.domed
+				x.flagSave = x.flag
+				x.ownerSave = x.owner
 	
-	def start(self):
-		self.drawHeroes()
+	def loadState(self):
+		for y in self.grid.matrix:
+			for x in y:
+				x.unoccupy()
+				x.level = x.levelSave
+				x.domed = x.domedSave
+				x.flag = x.flagSave
+				x.owner = x.ownerSave
+		for player in self.players:
+			if player.isActive:
+				player.skillActive = False
+				player.activatedSkill = 0
+				for builder in player.builder:
+					if builder.isActive:
+						builder.tileSave.occupy(builder)
+						builder.isSelected = False
+		self.gPhase = 1
+	
+	def restart(self):
+		for player in self.players:
+			player.hero = 'Vanilla'
+			player.isCurrent = False
+			player.maxActive = 1
+			player.activatedSkill = 0
+			for builder in player.builder:
+				builder.isSelected = False
+				builder.pos = self.width,self.height
+				builder.isActive = False
+				builder.tile = None
+		self.grid.levelUsed = [0,0,0,0]
+		for i in self.grid.matrix:
+			for tile in i:
+				tile.unoccupy()
+				tile.domed=False
+				tile.level = 0
+				tile.unflag()
+		self.current = 0
+		self.screen = 1
+		self.currentPlayer = 0
+		self.gPhase = 0
+		self.text = ''
 	
 	def init(self):
 		self.grid.setTileGrid()
 		for player in self.players:
-			
+			player.builder0.isActive = True
+			player.builder1.isActive = True
 			#Graeae
 			#Get an extra Builder
 			if player.hero == 'Graeae':
@@ -732,20 +799,20 @@ class NewGame(Widget):
 		
 		#Atlas
 		#If skill is Active, build a dome instead
-		if self.players[self.player].hero == 'Atlas' and self.players[self.player].skillActive:
+		if self.players[self.currentPlayer].hero == 'Atlas' and self.players[self.currentPlayer].skillActive:
 			self.grid.getTile(self.xP, self.yP).dome()
 		##
 			
 		else:
 			self.grid.getTile(self.xP, self.yP).build()
-		self.builder[self.current].isSelected = False
+		self.players[self.currentPlayer].builder[self.current].isSelected = False
 		#Adds or Removes a flag on the selected GridTile
 		if self.grid.getTile(self.xP, self.yP).isDomed():
 			self.grid.getTile(self.xP, self.yP).flag = 0
 			self.grid.getTile(self.xP, self.yP).owner = None
 		else:
-			self.grid.getTile(self.xP, self.yP).flag = self.player + 1
-			self.grid.getTile(self.xP, self.yP).owner = self.players[self.player]
+			self.grid.getTile(self.xP, self.yP).flag = self.currentPlayer + 1
+			self.grid.getTile(self.xP, self.yP).owner = self.players[self.currentPlayer]
 	
 	def on_touch_up(self, touch):
 		if self.screen == 0:
@@ -775,51 +842,90 @@ class NewGame(Widget):
 				self.yP=5
 			
 			if self.yP == 5:
+				if self.optionsButton.collide_point(touch.x,touch.y):
+					#self.restart()
+					#self.loadState()
+					self.screen = 2
+				elif self.undoTurnButton.x<=touch.x<=self.undoTurnButton.x+self.undoTurnButton.width and self.undoTurnButton.y<=touch.y<=self.undoTurnButton.y+self.undoTurnButton.height:
+					self.loadState()
+					
+				elif self.endTurnButton.x<=touch.x<=self.endTurnButton.x+self.endTurnButton.width and self.endTurnButton.y<=touch.y<=self.endTurnButton.y+self.endTurnButton.height and self.gPhase == 5:
+					##Add End of Turn effects here
+					
+					#Phobos and Deimos
+					#Kill any enemy Builder bordering both your builders
+					if self.players[self.currentPlayer].hero == 'Phobos and Deimos':
+						for k in self.players[(self.currentPlayer + 1)%2].builder:
+							if k.isActive:
+								if k.isBorderingEnemyBuilder(2):
+									k.die()
+					##
+					
+					####
+					
+					#Deactivates skill
+					if self.players[self.currentPlayer].hero in self.activeHeroes:
+						self.players[self.currentPlayer].activatedSkill = 0
+						self.players[self.currentPlayer].skillActive = False
+						
+					#Switches to next Player
+					self.gPhase = 1
+					self.players[self.currentPlayer].isCurrent = False
+					self.currentPlayer = (self.currentPlayer + 1) % self.playerCount
+					self.players[self.currentPlayer].isCurrent = True
+					self.grid.timer = [0,2,0,0,0,0]
+					self.saveState()
+					#Checks if current Player can no longer move
+					if self.players[self.currentPlayer].checkLose():
+						self.text = 'PLAYER '+str((self.currentPlayer + 1)%self.playerCount +1)+' WINS!'
+						self.gPhase =4
+				
 				#Prevents Passive heroes from using the skill button
-				if self.players[self.player].hero not in self.activeHeroes:
+				elif self.players[self.currentPlayer].hero not in self.activeHeroes:
 					pass
-				elif self.players[self.player].activatedSkill >= self.players[self.player].maxActive:
+				elif self.players[self.currentPlayer].activatedSkill >= self.players[self.currentPlayer].maxActive:
 					pass
-				elif (self.powerButton.width/2)**2 >= (touch.x - (self.powerButton.x+self.powerButton.width/2))**2 + (touch.y - (self.powerButton.y+self.powerButton.width/2))**2:
+				elif self.powerButton.collide_point(touch.x,touch.y):
 					
 					#Skill Deactivate
-					if self.players[self.player].skillActive:
-						self.players[self.player].skillActive = False
+					if self.players[self.currentPlayer].skillActive:
+						self.players[self.currentPlayer].skillActive = False
 						
-						if self.players[self.player].hero == 'Artemis' and self.gPhase == 2 and self.players[self.player].activatedSkill == 1:
+						if self.players[self.currentPlayer].hero == 'Artemis' and self.gPhase == 2 and self.players[self.currentPlayer].activatedSkill == 1:
 							self.gPhase = 3
-							self.players[self.player].activatedSkill -= 1
+							self.players[self.currentPlayer].activatedSkill -= 1
 					
 					#Skill Activate
 					else:
-						self.players[self.player].skillActive = True
+						self.players[self.currentPlayer].skillActive = True
 						
-						if self.players[self.player].hero == 'Artemis' and self.gPhase == 3:
+						if self.players[self.currentPlayer].hero == 'Artemis' and self.gPhase == 3:
 							self.gPhase = 2
-							self.players[self.player].activatedSkill += 1
+							self.players[self.currentPlayer].activatedSkill += 1
 			
 			#Initial Phase
 			elif self.gPhase == 0:
 				if not self.grid.getTile(self.xP, self.yP).isOccupied():
-					if self.player < 2:
-						if self.players[self.player].builder[self.current].isActive:
-							self.place(self.players[self.player].builder[self.current])
-							if not self.players[self.player].builder[self.current].isActive:
+					if self.currentPlayer < self.playerCount:
+						if self.players[self.currentPlayer].builder[self.current].isActive:
+							self.place(self.players[self.currentPlayer].builder[self.current])
+							if not self.players[self.currentPlayer].builder[self.current].isActive:
 								self.current = 0
-								self.players[self.player].isCurrent = False
-								self.player += 1
-								self.players[self.player%2].isCurrent = True
-					if self.player == 2:
+								self.players[self.currentPlayer].isCurrent = False
+								self.currentPlayer += 1
+								self.players[self.currentPlayer%self.playerCount].isCurrent = True
+					if self.currentPlayer == self.playerCount:
 						self.grid.timer = [0,2,0,0,0,0]
-						self.player = 0
+						self.currentPlayer = 0
 						self.current = 0
 						self.gPhase = 1
+						self.saveState()
 	
 					
 			#Choose  Phase
 			elif self.gPhase == 1:
 				if self.grid.getTile(self.xP, self.yP).isOccupied():
-					if self.grid.getTile(self.xP, self.yP).getOccupier().getPlayer().num == self.player:
+					if self.grid.getTile(self.xP, self.yP).getOccupier().getPlayer().num == self.currentPlayer:
 						self.grid.getTile(self.xP,self.yP).getOccupier().isSelected = True
 						self.current = self.grid.getTile(self.xP, self.yP).getOccupier().getNum()
 						self.gPhase = 2
@@ -828,37 +934,37 @@ class NewGame(Widget):
 			#Move Phase
 			elif self.gPhase == 2:
 				#Checks if selected tile contains the selected Builder
-				if self.builder[self.current].getTile().getX()==self.xP and self.builder[self.current].getTile().getY()==self.yP:
+				if self.players[self.currentPlayer].builder[self.current].getTile().getX()==self.xP and self.players[self.currentPlayer].builder[self.current].getTile().getY()==self.yP:
 					self.grid.getTile(self.xP,self.yP).getOccupier().isSelected = False
 					self.gPhase = 1
 				#Checks if the selected tile contains a Builder owned by the current Player
 				elif self.grid.getTile(self.xP, self.yP).isOccupied():
-					if self.grid.getTile(self.xP, self.yP).getOccupier().getPlayer().num == self.player:
-						self.builder[self.current].isSelected = False
+					if self.grid.getTile(self.xP, self.yP).getOccupier().getPlayer().num == self.currentPlayer:
+						self.players[self.currentPlayer].builder[self.current].isSelected = False
 						self.grid.getTile(self.xP,self.yP).getOccupier().isSelected = True
 						self.current = self.grid.getTile(self.xP, self.yP).getOccupier().getNum()
 				#Checks if the selected Builder can move to the selected tile
-				if self.builder[self.current].moveBuilder(self.xP, self.yP):
+				if self.players[self.currentPlayer].builder[self.current].moveBuilder(self.xP, self.yP):
 					
 					#Artemis
 					#Checks if skill is Active and has not been used yet.
 					#If Yes, move again
-					if self.players[self.player].hero == 'Artemis' and self.players[self.player].skillActive:
-						if self.players[self.player].activatedSkill == 0:
-							self.players[self.player].activatedSkill += 2
-							self.players[self.player].skillActive = False
+					if self.players[self.currentPlayer].hero == 'Artemis' and self.players[self.currentPlayer].skillActive:
+						if self.players[self.currentPlayer].activatedSkill == 0:
+							self.players[self.currentPlayer].activatedSkill += 2
+							self.players[self.currentPlayer].skillActive = False
 							self.gPhase = 2
 						else: 
-							self.players[self.player].activatedSkill += 1
-							self.players[self.player].skillActive = False
+							self.players[self.currentPlayer].activatedSkill += 1
+							self.players[self.currentPlayer].skillActive = False
 							self.gPhase = 3
 					##
 					
 					else:
 						self.gPhase = 3
 					#Checks if the current Player won by moving
-					if self.players[self.player].checkWin():
-						self.text = 'PLAYER '+str(self.player + 1)+' WINS!'
+					if self.players[self.currentPlayer].checkWin():
+						self.text = 'PLAYER '+str(self.currentPlayer + 1)+' WINS!'
 						self.gPhase = 4
 				
 			#Build Phase
@@ -868,73 +974,82 @@ class NewGame(Widget):
 				
 				#Graeae
 				#You can use any of your Builder to build
-				if self.players[self.player].hero == 'Graeae':
-					for k in self.players[self.player].builder:
+				if self.players[self.currentPlayer].hero == 'Graeae':
+					for k in self.players[self.currentPlayer].builder:
 						if k.isActive:
 							if k.canBuildOn(self.xP, self.yP):
 								valid = True
 								break
 				##
 							
-				elif self.builder[self.current].canBuildOn(self.xP, self.yP):
+				elif self.players[self.currentPlayer].builder[self.current].canBuildOn(self.xP, self.yP):
 					valid = True
 				if valid:
 					self.build()
+					self.gPhase = 5
 					#End of current Player's Turn
 					
-					##Add End of Turn effects here
-					
-					#Phobos and Deimos
-					#Kill any enemy Builder bordering both your builders
-					if self.players[self.player].hero == 'Phobos and Deimos':
-						for k in self.players[(self.player + 1)%2].builder:
-							if k.isActive:
-								if k.isBorderingEnemyBuilder(2):
-									k.die()
-					##
-					
-					
-					####
-					
-					#Deactivates skill
-					if self.players[self.player].hero in self.activeHeroes:
-						self.players[self.player].activatedSkill = 0
-						self.players[self.player].skillActive = False
-						
-					#Switches to next Player
-					self.gPhase = 1
-					self.players[self.player].isCurrent = False
-					self.player = (self.player + 1) % 2
-					self.players[self.player].isCurrent = True
-					self.grid.timer = [0,2,0,0,0,0]
-					#Checks if current Player can no longer move
-					if self.players[self.player].checkLose():
-						self.text = 'PLAYER '+str((self.player + 1)%2 +1)+' WINS!'
-						self.gPhase =4
+			elif self.gPhase == 5:
+				pass
 					
 			elif self.gPhase == 4:
-				pass
+				self.restart()
+				self.screen = 4
+				self.text = ''
 				
-		if self.screen == 1:
+		elif self.screen == 1:
 			valid = False
-			if self.drawn0.x <= touch.x <= self.drawn0.x + self.drawn0.width and self.drawn0.y <= touch.y <= self.drawn0.y + self.drawn0.height:
-				self.players[self.player].hero = self.hero0
+			if self.drawn0.collide_point(touch.x,touch.y):
+				self.players[self.currentPlayer].hero = self.hero0
 				valid = True
-			elif self.drawn1.x <= touch.x <= self.drawn1.x + self.drawn1.width and self.drawn1.y <= touch.y <= self.drawn1.y + self.drawn1.height:
-				self.players[self.player].hero = self.hero1
+			elif self.drawn1.collide_point(touch.x,touch.y):
+				self.players[self.currentPlayer].hero = self.hero1
 				valid = True
-			elif self.drawn2.x <= touch.x <= self.drawn2.x + self.drawn2.width and self.drawn2.y <= touch.y <= self.drawn2.y + self.drawn2.height:
-				self.players[self.player].hero = self.hero2
+			elif self.drawn2.collide_point(touch.x,touch.y):
+				self.players[self.currentPlayer].hero = self.hero2
 				valid = True
 			if valid:
-				self.players[self.player].isCurrent = False
-				self.player += 1
-				self.players[self.player%2].isCurrent = True
+				self.players[self.currentPlayer].isCurrent = False
+				self.currentPlayer += 1
+				self.players[self.currentPlayer%self.playerCount].isCurrent = True
 				self.drawHeroes()
-				if self.player == 2:
-					self.player = 0
+				if self.currentPlayer == self.playerCount:
+					self.currentPlayer = 0
 					self.init()
 					self.screen = 0
+					
+		elif self.screen == 2:
+			if self.closeOptionsButton.collide_point(touch.x,touch.y):
+				self.screen = 0
+			elif self.settingsButton.collide_point(touch.x,touch.y):
+				self.screen = 3
+				
+		elif self.screen == 3:
+			if self.closeSettingsButton.collide_point(touch.x,touch.y):
+				self.screen = 2
+		elif self.screen == 4:
+			if self.startGame.collide_point(touch.x,touch.y):
+#				self.restart()
+				self.screen = 1
+			elif self.gameOptionsButton.collide_point(touch.x,touch.y):
+				self.screen = 5
+		elif self.screen == 5:
+			if self.closeGameOptionsButton.collide_point(touch.x,touch.y):
+				self.screen = 4
+			pass
+			
+class GameButton(ButtonBehavior, Widget):
+	def __init__(self, **kwargs):
+		super(GameButton, self).__init__(**kwargs)
+		
+class GameCircleButton(ButtonBehavior, Widget):
+	def __init__(self, **kwargs):
+		super(GameCircleButton, self).__init__(**kwargs)
+	def collide_point(self, x, y):
+		if (self.width/2)**2 >= (x - (self.x+self.width/2))**2 + (y - (self.y+self.width/2))**2:
+			return True
+		return False
+		
 
 class NewApp(App):
 
