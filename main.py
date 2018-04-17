@@ -33,4 +33,5 @@ class SantoriniApp(App):
     	return True
 
 if __name__ in ('__main__','__android__'):
+	#sound = SoundLoader.load("assets/sound fx/win fx.mp3")
     SantoriniApp().run()

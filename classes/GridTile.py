@@ -32,10 +32,11 @@ class GridTile(Widget):
     #EDIT
     #May need check methods similar to those in Builder
     
-    def isBorderingBuilder(self, num):
+    def isBorderingBuilder(self, num, count = 1):
         '''
         Returns true if a builder is bordering, in the four cardinal directions, a builder.
         '''
+        n = 0
         x = int(self.getX())
         y = int(self.getY())
         
@@ -47,6 +48,8 @@ class GridTile(Widget):
                     pass
                 elif self.getGrid().getTile(x + i, y + j).isOccupied():
                     if self.getGrid().getTile(x + i, y + j).getOccupier().player.num == num:
+                        n += 1
+                    if n == count:
                         return True
         return False
         

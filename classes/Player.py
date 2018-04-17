@@ -16,14 +16,26 @@ class Player(Widget):
     #Extra Builders
     builder2 = ObjectProperty(None)
     builder3 = ObjectProperty(None)
+    ##
     
     builder = ReferenceListProperty(builder0, builder1, builder2, builder3)
     hero = StringProperty('')
-    opponent = ObjectProperty(None)
     isCurrent = BooleanProperty(False)
     skillActive = BooleanProperty(False)
     activatedSkill = NumericProperty(0)
     maxActive = NumericProperty(1)
+    
+    def move(self):
+        '''
+        Depreciated. Do not use.
+        '''
+        pass
+        
+    def build(self):
+        '''
+        Depreciated. Do not use.
+        '''
+        pass
         
     def checkWin(self):
         '''

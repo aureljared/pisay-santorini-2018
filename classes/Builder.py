@@ -25,11 +25,12 @@ class Builder(Widget):
     #isBorderingEnemyBuilder
     #isBordering
     
-    def isAdjacentToFriendlyTerritory(self):
+    def isAdjacentToFriendlyTerritory(self, count = 1):
         '''
         Returns true if a builder is adjacent, in the four cardinal directions or in the four diagonal directions, to friendly territory.
         A territory is described as friendly if it was last built on by a builder owned by this player.
         '''
+        n=0
         x = int(self.tile.getX())
         y = int(self.tile.getY())
         
@@ -39,14 +40,17 @@ class Builder(Widget):
                     continue
                 elif self.tile.getGrid().getTile(x + i, y + j).owner is not None:
                     if self.tile.getGrid().getTile(x + i, y + j).owner.num == self.player.num:
+                        n += 1
+                    if n == count:
                         return True
         return False
         
-    def isAdjacentToEnemyTerritory(self):
+    def isAdjacentToEnemyTerritory(self, count = 1):
         '''
         Returns true if a builder is adjacent, in the four cardinal directions or in the four diagonal directions, to enemy territory.
         A territory is described as enemy if it was last built on by a builder owned by another player.
         '''
+        n=0
         x = int(self.tile.getX())
         y = int(self.tile.getY())
         
@@ -56,14 +60,17 @@ class Builder(Widget):
                     pass
                 elif self.tile.getGrid().getTile(x + i, y + j).owner is not None:
                     if self.tile.getGrid().getTile(x + i, y + j).owner.num != self.player.num:
+                        n += 1
+                    if n == count:
                         return True
         return False
     
-    def isBorderingFriendlyTerritory(self):
+    def isBorderingFriendlyTerritory(self, count = 1):
         '''
         Returns true if a builder is bordering, in the four cardinal directions, friendly territory.
         A territory is described as friendly if it was last built on by a builder owned by this player.
         '''
+        n=0
         x = int(self.tile.getX())
         y = int(self.tile.getY())
         
@@ -75,14 +82,17 @@ class Builder(Widget):
                     pass
                 elif self.tile.getGrid().getTile(x + i, y + j).owner is not None:
                     if self.tile.getGrid().getTile(x + i, y + j).owner.num == self.player.num:
+                        n += 1
+                    if n == count:
                         return True
         return False
         
-    def isBorderingEnemyTerritory(self):
+    def isBorderingEnemyTerritory(self, count = 1):
         '''
         Returns true if a builder is bordering, in the four cardinal directions, enemy territory.
         A territory is descibed as enemy if it was last built on by a builder owned by another player.
         '''
+        n=0
         x = int(self.tile.getX())
         y = int(self.tile.getY())
         
@@ -94,13 +104,16 @@ class Builder(Widget):
                     pass
                 elif self.tile.getGrid().getTile(x + i, y + j).owner is not None:
                     if self.tile.getGrid().getTile(x + i, y + j).owner.num != self.player.num:
+                        n += 1
+                    if n == count:
                         return True
         return False
         
-    def isAdjacentToFriendlyBuilder(self):
+    def isAdjacentToFriendlyBuilder(self, count = 1):
         '''
         Returns true if a builder is adjacent, in the four cardinal directions or in the four diagonal directions, to a friendly builder.
         '''
+        n=0
         x = int(self.tile.getX())
         y = int(self.tile.getY())
         
@@ -110,13 +123,16 @@ class Builder(Widget):
                     pass
                 elif self.tile.getGrid().getTile(x + i, y + j).isOccupied():
                     if self.tile.getGrid().getTile(x + i, y + j).getOccupier().player.num == self.player.num:
+                        n += 1
+                    if n == count:
                         return True
         return False
         
-    def isAdjacentToEnemyBuilder(self):
+    def isAdjacentToEnemyBuilder(self, count = 1):
         '''
         Returns true if a builder is adjacent, in the four cardinal directions or in the four diagonal directions, to an enemy builder.
         '''
+        n=0
         x = int(self.tile.getX())
         y = int(self.tile.getY())
         
@@ -126,13 +142,16 @@ class Builder(Widget):
                     pass
                 elif self.tile.getGrid().getTile(x + i, y + j).isOccupied():
                     if self.tile.getGrid().getTile(x + i, y + j).getOccupier().player.num != self.player.num:
+                        n += 1
+                    if n == count:
                         return True
         return False
         
-    def isBorderingFriendlyBuilder(self):
+    def isBorderingFriendlyBuilder(self,count = 1):
         '''
         Returns true if a builder is bordering, in the four cardinal directions, a friendly builder.
         '''
+        n=0
         x = int(self.tile.getX())
         y = int(self.tile.getY())
         
@@ -144,10 +163,12 @@ class Builder(Widget):
                     pass
                 elif self.tile.getGrid().getTile(x + i, y + j).isOccupied():
                     if self.tile.getGrid().getTile(x + i, y + j).getOccupier().player.num == self.player.num:
+                        n += 1
+                    if n == count:
                         return True
         return False
         
-    def isBorderingEnemyBuilder(self, count):
+    def isBorderingEnemyBuilder(self, count=1):
         '''
         Returns true if a builder is bordering, in the four cardinal directions, an enemy builder.
         '''
@@ -163,6 +184,27 @@ class Builder(Widget):
                     pass
                 elif self.tile.getGrid().getTile(x + i, y + j).isOccupied():
                     if self.tile.getGrid().getTile(x + i, y + j).getOccupier().player.num != self.player.num:
+                        n += 1
+                    if n == count:
+                        return True
+        return False
+        
+    def isBorderingGeneral(self, general, count=1):
+        '''
+        Returns true if a builder is bordering, in the four cardinal directions, an enemy builder.
+        '''
+        x = int(self.tile.getX())
+        y = int(self.tile.getY())
+        n = 0
+        
+        for i in (-1,0,1):
+            for j in (-1,0,1):
+                if i != 0 and j != 0:
+                    pass
+                elif x+i ==-1 or y+j == -1 or x+i == 5 or y+j == 5 or i == 0 and j == 0:
+                    pass
+                elif self.tile.getGrid().getTile(x + i, y + j).isOccupied():
+                    if self.tile.getGrid().getTile(x + i, y + j).getOccupier().player.hero == general:
                         n += 1
                     if n == count:
                         return True
@@ -193,10 +235,9 @@ class Builder(Widget):
         #Bacchus
         #Checks wether your Builder is adjacent to a Builder owned by an enemy Bacchus
         #If Yes, your Builder can't move vertically or horizontally
-        if self.player.opponent.hero == 'Bacchus':
-            if self.isBorderingEnemyBuilder():
-                if self.tile.getX() == xInt or self.tile.getY() == yInt:
-                    valid = False
+        if self.isBorderingGeneral('Bacchus'):
+            if self.tile.getX() == xInt or self.tile.getY() == yInt:
+                valid = False
         ##
         
         #Mercury
@@ -207,6 +248,7 @@ class Builder(Widget):
                 range += 1
         ##
         
+        #First, make sure that it's actually adjacent and within bounds
         if valid:
             if xInt == -1 or yInt == -1 or xInt == 5 or yInt == 5:
                 valid = False
@@ -224,6 +266,7 @@ class Builder(Widget):
                     valid = True
             ##
                     
+        #Next, check whether the tile being moved to is occupied and/or is domed
             if valid:
                 if self.tile.getGrid().getTile(xInt,yInt).isDomed():
                     valid = False
@@ -237,6 +280,7 @@ class Builder(Widget):
                         
                     else:
                         valid = False
+        #Finally, check whether the height lets you move
                 if valid:
                     if self.tile.getGrid().getTile(xInt,yInt).getLevel() - self.tile.getLevel() > 1:
                             valid = False
@@ -254,6 +298,7 @@ class Builder(Widget):
         range = 1
         valid = True
         if valid:
+        #First, make sure that it's actually adjacent and within bounds
             if xInt == -1 or yInt == -1 or xInt == 5 or yInt == 5:
                 valid = False
             if self.tile.getX() > xInt+range or self.tile.getX() < xInt-range:
@@ -263,10 +308,12 @@ class Builder(Widget):
             if self.tile.getX() == xInt and self.tile.getY() == yInt:
                 valid = False
             if valid:
+        #Next, check whether the tile being moved to is occupied and/or is domed
                 target = self.tile.getGrid().getTile(xInt,yInt)
                 if target.isDomed() or target.isOccupied():
                     valid = False
                 if valid:
+        #Lastly, check if we actually have a piece available
                     if self.tile.getGrid().getUsed(target.getLevel()) == self.tile.getGrid().getCap(target.getLevel()):
                         valid = False
         return valid
@@ -275,21 +322,17 @@ class Builder(Widget):
         '''
         Moves this builder to a tile with the specified x and y coordinates.
         '''
-        if self.canMoveTo(xInt, yInt):
-            
-            #Apollo
-            #Swap places with the Builder occupying selected GridTile
-            if self.player.hero == 'Apollo' and self.tile.grid.getTile(xInt, yInt).isOccupied():
-                builder = self.tile.grid.getTile(xInt, yInt).getOccupier()
-                builder.tile.unoccupy()
-                self.tile.occupy(builder)
-            ##
-                
-            else:
-                self.tile.unoccupy()
-            self.tile.grid.getTile(xInt, yInt).occupy(self)
-            return True
-        return False
+        #Apollo
+        #Swap places with the Builder occupying selected GridTile
+        if self.player.hero == 'Apollo' and self.tile.grid.getTile(xInt, yInt).isOccupied():
+            builder = self.tile.grid.getTile(xInt, yInt).getOccupier()
+            builder.tile.unoccupy()
+            self.tile.occupy(builder)
+        ##
+        
+        else:
+            self.tile.unoccupy()
+        self.tile.grid.getTile(xInt, yInt).occupy(self)
     
     def setTile(self, tile):
         '''

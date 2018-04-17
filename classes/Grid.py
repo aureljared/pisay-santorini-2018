@@ -40,7 +40,7 @@ class Grid(Widget):
     matrix = ReferenceListProperty(y1,y2,y3,y4,y5)
     levelUsed = ListProperty([0,0,0,0])
     levelCap = ListProperty([16,14,12,14])
-    timer = ListProperty([0,0,0,0,0,0])
+    timer = ListProperty([0,0,0,0])
     
     def setTileGrid(self):
         '''
