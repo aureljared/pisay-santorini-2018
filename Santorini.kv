@@ -573,21 +573,6 @@
 				source: 'drawables/numbers/'+str(root.timer[3])+'.png'
 				pos: root.width/1325*221,root.height-root.width/1325*141
 				size: root.width /1326*39, root.width/1326*51
-#			Rectangle:
-#				source: 'drawables/numbers/'+str(root.timer[4])+'.png'
-#				pos: 4*root.width/1326*(597-553),0
-#				size: root.width /1326*41, root.width/1326*52
-#			Rectangle:
-#				source: 'drawables/numbers/'+str(root.timer[5])+'.png'
-#				pos: 5*root.width/1326*(597-553),0
-#				size: root.width /1326*41, root.width/1326*52
-				
-#			Color:
-#				rgba: root.parent.player, 0, (root.parent.player + 1)%2,1
-#			Rectangle:
-#				source:'drawables/numbers/' + str(root.parent.player) + '.png'
-#				pos:0,0
-#				size: self.width /1326*41, self.width/1326*52
 		
 <Player>:
 	builder0:builder0
@@ -710,6 +695,8 @@
 	optionsButton:optionsButton
 	closeOptionsButton:closeOptionsButton
 	settingsButton:settingsButton
+	restartButton:restartButton
+	quitButton:quitButton
 	closeSettingsButton:closeSettingsButton
 	startGame:startGame
 	gameOptionsButton:gameOptionsButton
@@ -717,6 +704,14 @@
 	closeGameOptionsButton:closeGameOptionsButton
 	soundSlider:soundSlider
 	musicSlider:musicSlider
+	startGameButton:startGameButton
+	playerCountInc:playerCountInc
+	playerCountDec:playerCountDec
+	timerMinInc:timerMinInc
+	timerMinDec:timerMinDec
+	timerSecInc:timerSecInc
+	timerSecDec:timerSecDec
+	generalToggle:generalToggle
 	
 	canvas:
 		Rectangle:
@@ -727,26 +722,32 @@
 		height:root.height
 		width:root.width
 		y: root.center_y - root.width/2 + root.width*251/1326/2 - self.width/1326*207/2
-			
+	
+	Widget:
+		pos: 0,root.width/1326*251
+		size: root.width, root.height
+		canvas:
+			Color:
+				rgba:1,1,1,(root.screen==1)
+			Rectangle:
+				source: 'drawables/ui panes and menus/mask.png'
+				size: self.size
+				pos: self.pos
 	#Player Initialization
 	Player:
 		id:player0
-		isActive:True
 		color: 0.25,0.25,0.75
 		num:0
 		type: 'drawables/workers/worker ph.png'
-		opponent:player1
 		hero:'Vanilla'
 		isCurrent:True
 		pos: root.width/1326*1074, root.width/1326*73
 		size: root.width /1326*191, root.width/1326*251
 	Player:
 		id:player1
-		isActive:True
 		color: 0.75,0.25,0.25
 		num:1
 		type: 'drawables/workers/worker ch.png'
-		opponent:player0
 		hero:'Vanilla'
 		pos: root.width/1326*1074, root.width/1326*73
 		size: root.width /1326*191, root.width/1326*251
@@ -755,7 +756,6 @@
 		num:2
 		color:0.75,0.75,0.25
 		type: 'drawables/workers/worker la.png'
-		opponent:player0
 		hero:'Vanilla'
 		pos: root.width/1326*1074, root.width/1326*73
 		size: root.width /1326*191, root.width/1326*251
@@ -764,7 +764,6 @@
 		num:3
 		color:0.25,0.75,0.25
 		type: 'drawables/workers/worker my.png'
-		opponent:player0
 		hero:'Vanilla'
 		pos: root.width/1326*1074, root.width/1326*73
 		size: root.width /1326*191, root.width/1326*251
@@ -838,7 +837,7 @@
 			Color:
 				rgba:1,1,1,self.state == 'down'
 			Rectangle:
-				source:'drawables/buttons/onclick highlight bare.png'
+				source:self.source
 				size: self.size
 				pos: self.pos
     GameButton:
@@ -856,7 +855,7 @@
 			Color:
 				rgba:1,1,1,self.state == 'down'
 			Rectangle:
-				source: 'drawables/buttons/onclick highlight bare.png'
+				source: self.source
 				size: self.size
 				pos: self.pos
     	
@@ -874,18 +873,18 @@
 	Widget:
 		id:optionsScreen
 		pos:0, root.center_y-self.height/2
-		size: root.width, root.width/728*880
+		size: root.width, root.width/1327*1778
 		canvas:
 			Color:
 				rgba:1,1,1,(root.screen==2)
 			Rectangle:
-				source: 'drawables/ui panes and menus/options_menu_game.png'
+				source: 'drawables/ui panes and menus/options menu.png'
 				size: self.size
 				pos: self.pos
 	GameCircleButton:
 		id:closeOptionsButton
-		pos: root.width/1327*1137, root.center_y + root.width/1327*629
-		size: root.width/1327*124, root.width/1327*124
+		pos: root.width/1327*1136, root.center_y + root.width/1327*713
+		size: root.width/1327*125, root.width/1327*125
 		canvas:
 			Color:
 				rgba:1,1,1,(root.screen==2 and self.state=='down')
@@ -895,8 +894,8 @@
 				pos: self.pos
 	GameButton:
 		id:settingsButton
-		pos: root.width/1327*218, root.center_y - root.width/1327*157
-		size: root.width/1327*880, root.width/1327*185
+		pos: root.width/1327*189, root.center_y - root.width/1327*181
+		size: root.width/1327*960, root.width/1327*200
 		canvas.before:
 			PushMatrix
 			Rotate:
@@ -908,13 +907,13 @@
 			Color:
 				rgba:1,1,1,(root.screen==2 and self.state=='down')
 			Rectangle:
-				source: 'drawables/buttons/onclick highlight bare.png'
+				source: self.source
 				size: self.size
 				pos: self.pos
 	GameButton:
-		id:concedeButton
-		pos: root.width/1327*226, root.center_y + root.width/1327*188
-		size: root.width/1327*880, root.width/1327*185
+		id:restartButton
+		pos: root.width/1327*202, root.center_y + root.width/1327*199
+		size: root.width/1327*960, root.width/1327*200
 		canvas.before:
 			PushMatrix
 			Rotate:
@@ -926,13 +925,13 @@
 			Color:
 				rgba:1,1,1,(root.screen==2 and self.state=='down')
 			Rectangle:
-				source: 'drawables/buttons/onclick highlight bare.png'
+				source: self.source
 				size: self.size
 				pos: self.pos
 	GameButton:
 		id:quitButton
-		pos: root.width/1327*217, root.center_y - root.width/1327*498
-		size: root.width/1327*880, root.width/1327*185
+		pos: root.width/1327*189, root.center_y - root.width/1327*555
+		size: root.width/1327*960, root.width/1327*200
 		canvas.before:
 			PushMatrix
 			Rotate:
@@ -944,7 +943,7 @@
 			Color:
 				rgba:1,1,1,(root.screen==2 and self.state=='down')
 			Rectangle:
-				source: 'drawables/buttons/onclick highlight bare.png'
+				source: self.source
 				size: self.size
 				pos: self.pos
 	Widget:
@@ -953,18 +952,18 @@
 		size: root.width, root.width/1327*1778
 		canvas:
 			Color:
-				rgba:1,1,1,(root.screen==3)
+				rgba:1,1,1,(root.screen==3 or root.screen == 6)
 			Rectangle:
 				source: 'drawables/ui panes and menus/settings menu.png'
 				size: self.size
 				pos: self.pos
 	GameCircleButton:
 		id:closeSettingsButton
-		pos: root.width/1327*1220, root.height - root.width/1327*99
+		pos: root.width/1327*1220, root.center_y + root.width/1327*786
 		size: root.width/1327*66, root.width/1327*66
 		canvas:
 			Color:
-				rgba:1,1,1,(root.screen==3 and self.state == 'down')
+				rgba:1,1,1,((root.screen==3 or root.screen == 6) and self.state == 'down')
 			Ellipse:
 				source: 'drawables/buttons/button push.png'
 				size: self.size
@@ -972,7 +971,7 @@
 	Slider:
 		id:soundSlider
 		pos: root.width/1327*550,root.center_y+root.width/1327*400
-		disabled: (root.screen != 3)
+		disabled: (not (root.screen == 3 or root.screen == 6))
 		cursor_image:'drawables/buttons/slider peg.png'
 		cursor_disabled_image:'drawables/blank.png'
 		background_disabled_horizontal:'drawables/blank.png'
@@ -984,11 +983,11 @@
 		cursor_height:root.width/1327*60
 		max:100
 		min:0
-		value:0
+		value:50
 	Slider:
 		id:musicSlider
 		pos: root.width/1327*550,root.center_y+root.width/1327*175
-		disabled: (root.screen != 3)
+		disabled: (not (root.screen == 3 or root.screen == 6))
 		cursor_image:'drawables/buttons/slider peg.png'
 		cursor_disabled_image:'drawables/blank.png'
 		background_disabled_horizontal:'drawables/blank.png'
@@ -1000,7 +999,7 @@
 		cursor_height:root.width/1327*60
 		max:100
 		min:0
-		value:0
+		value:50
 		
 	Widget:
 		pos: 0,0
@@ -1020,7 +1019,7 @@
 			Color:
 				rgba:1,1,1,(root.screen==4)
 			Rectangle:
-				source: 'drawables/ui panes and menus/start_game.png'
+				source: 'drawables/buttons/set_up_match.png'
 				size: self.size
 				pos: self.pos
 	Widget:
@@ -1031,7 +1030,7 @@
 			Color:
 				rgba:1,1,1,(root.screen==4)
 			Rectangle:
-				source: 'drawables/ui panes and menus/options.png'
+				source: 'drawables/buttons/settings.png'
 				size: self.size
 				pos: self.pos
 	Widget:
@@ -1042,7 +1041,7 @@
 			Color:
 				rgba:1,1,1,(root.screen==4)
 			Rectangle:
-				source: 'drawables/ui panes and menus/quit.png'
+				source: 'drawables/buttons/quit.png'
 				size: self.size
 				pos: self.pos
 	Widget:
@@ -1053,12 +1052,12 @@
 			Color:
 				rgba:1,1,1,(root.screen==5)
 			Rectangle:
-				source: 'drawables/ui panes and menus/game setup bare.png'
+				source: 'drawables/ui panes and menus/game setup.png'
 				size: self.size
 				pos: self.pos
 	GameCircleButton:
 		id:closeGameOptionsButton
-		pos: root.width/1327*1224, root.height - root.width/1327*102
+		pos: root.width/1327*1224, root.center_y + root.width/1327*783
 		size: root.width/1327*68, root.width/1327*68
 		canvas:
 			Color:
@@ -1067,6 +1066,128 @@
 				source: 'drawables/buttons/button push.png'
 				size: self.size
 				pos: self.pos
+	GameCircleButton:
+		id:playerCountDec
+		pos: root.width/1327*733, root.center_y + root.width/1327*402
+		size: root.width/1327*92, root.width/1327*92
+		canvas:
+			Color:
+				rgba:1,1,1,(root.screen==5 and self.state == 'down')
+			Ellipse:
+				source: 'drawables/buttons/button push.png'
+				size: self.size
+				pos: self.pos
+	GameCircleButton:
+		id:playerCountInc
+		pos: root.width/1327*1128, root.center_y + root.width/1327*402
+		size: root.width/1327*92, root.width/1327*92
+		canvas:
+			Color:
+				rgba:1,1,1,(root.screen==5 and self.state == 'down')
+			Ellipse:
+				source: 'drawables/buttons/button push.png'
+				size: self.size
+				pos: self.pos
+	GameCircleButton:
+		id:timerMinDec
+		pos: root.width/1327*169, root.center_y - root.width/1327*109
+		size: root.width/1327*92, root.width/1327*92
+		canvas:
+			Color:
+				rgba:1,1,1,(root.screen==5 and self.state == 'down')
+			Ellipse:
+				source: 'drawables/buttons/button push.png'
+				size: self.size
+				pos: self.pos
+	GameCircleButton:
+		id:timerMinInc
+		pos: root.width/1327*564, root.center_y - root.width/1327*109
+		size: root.width/1327*92, root.width/1327*92
+		canvas:
+			Color:
+				rgba:1,1,1,(root.screen==5 and self.state == 'down')
+			Ellipse:
+				source: 'drawables/buttons/button push.png'
+				size: self.size
+				pos: self.pos
+	GameCircleButton:
+		id:timerSecDec
+		pos: root.width/1327*733, root.center_y - root.width/1327*109
+		size: root.width/1327*92, root.width/1327*92
+		canvas:
+			Color:
+				rgba:1,1,1, (root.screen==5 and self.state == 'down')
+			Ellipse:
+				source: 'drawables/buttons/button push.png'
+				size: self.size
+				pos: self.pos
+	GameCircleButton:
+		id:timerSecInc
+		pos: root.width/1327*1128, root.center_y - root.width/1327*109
+		size: root.width/1327*92, root.width/1327*92
+		canvas:
+			Color:
+				rgba:1,1,1, (root.screen==5 and self.state == 'down')
+			Ellipse:
+				source: 'drawables/buttons/button push.png'
+				size: self.size
+				pos: self.pos
+	GameButton:
+		id:startGameButton
+		pos: root.width/1327*377, root.center_y - root.width/1327*683
+		size: root.width/1327*570, root.width/1327*119
+		canvas.before:
+			PushMatrix
+			Rotate:
+				angle: -1
+				origin: self.pos
+		canvas.after:
+			PopMatrix
+		canvas:
+			Color:
+				rgba:1,1,1,(root.screen==5 and self.state=='down')
+			Rectangle:
+				source: self.source
+				size: self.size
+				pos: self.pos
+	GameToggleButton:
+		id:generalToggle
+		on_state:root.togglePower()
+		pos: root.width/1327*775, root.center_y - root.width/1327*350
+		size: root.width/1327*400, root.width/1327*112
+		canvas:
+			Color:
+				rgba:1,1,1,(root.screen==5)
+			Rectangle:
+				source: self.source
+				size: self.size
+				pos: self.pos
+	Widget:
+		size: root.size
+		canvas:
+			Color:
+				rgba:1,1,1,root.screen == 5
+			Rectangle:
+				source: 'drawables/numbers/'+str(root.playerCount)+'.png'
+				pos: root.width/1327*982, root.center_y + root.width/1327*387
+				size: root.width /1326*94, root.width/1326*118
+			Rectangle:
+				source: 'drawables/numbers/'+str(root.timerCap[0])+'.png'
+				pos: root.width/1327*314, root.center_y - root.width/1327*124
+				size: root.width /1326*94, root.width/1326*118
+			Rectangle:
+				source: 'drawables/numbers/'+str(root.timerCap[1])+'.png'
+				pos: root.width/1327*418, root.center_y - root.width/1327*124
+				size: root.width /1326*94, root.width/1326*118
+			Rectangle:
+				source: 'drawables/numbers/'+str(root.timerCap[2])+'.png'
+				pos: root.width/1327*878, root.center_y - root.width/1327*124
+				size: root.width /1326*94, root.width/1326*118
+			Rectangle:
+				source: 'drawables/numbers/'+str(root.timerCap[3])+'.png'
+				pos: root.width/1327*982, root.center_y - root.width/1327*124
+				size: root.width /1326*94, root.width/1326*118
 
 <GameButton>:
 <GameCircleButton>:
+<GameToggleButton>:

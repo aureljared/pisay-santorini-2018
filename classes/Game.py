@@ -2,6 +2,9 @@ from kivy.uix.widget import Widget
 from kivy.properties import ReferenceListProperty, ListProperty, ObjectProperty, StringProperty, NumericProperty, BooleanProperty
 #from kivy.core.sound import SoundLoader
 from random import sample
+
+# Heroes
+from heroes.Hero import Hero
         
 class Game(Widget):
     text = StringProperty('')
@@ -18,7 +21,7 @@ class Game(Widget):
     currentPlayer = NumericProperty(0) #Current Player (0, 1) 0 is named Player1, 1 is Player2
     xP=NumericProperty(0)
     yP=NumericProperty(0)
-    heroes = ListProperty(['Bacchus','Mercury','Graeae','Janus','Apollo','Phobos and Deimos','Atlas','Artemis','Hephaestus'])
+    heroes = ListProperty(Hero().getAvailableHeroes())
     #Add Active heroes here
     activeHeroes = ['Atlas', 'Artemis', 'Hephaestus']
     hero0 = StringProperty('')
@@ -81,9 +84,8 @@ class Game(Widget):
         self.player0.isCurrent = True
         
     def drawHeroes(self):
-        #drawn = sample(self.heroes,3)
         #Test Heroes
-        drawn = ['Bacchus', 'Phobos and Deimos', 'Atlas', 'Hephaestus']
+        drawn = sample(self.heroes,3)
         for i in range(3):
             self.drawnHeroes[i] = drawn[i]
             
